@@ -1,0 +1,133 @@
+syntax = "proto3";
+
+import "shared.proto";
+import "nanopb.proto";
+
+// GO
+option go_package = "git-ima.europe.phoenixcontact.com/abacusgo/linkbusgo";
+
+// JAVA settings
+option java_multiple_files = false;
+option java_package = "com.phoenixcontact.emalyticscatanio.message";
+option java_outer_classname = "EmalyticsCatanIoCom";
+
+
+/* RS 485 ********************************************************************/
+// interface settings, read, write, disable, observe rx
+
+message ComMessage {
+    enum Baud {
+        BAUD_DONT_CHANGE = 0;
+        DAUD_DEFAULT = 1; // depends on model; BAUD_9600 preferred
+        BAUD_USER = 2; // for values not included in the enumeration
+        BAUD_50 = 3;
+        BAUD_75 = 4;
+        BAUD_110 = 5;
+        BAUD_134 = 6;
+        BAUD_150 = 7;
+        BAUD_200 = 8;
+        BAUD_300 = 9;
+        BAUD_600 = 10;
+        BAUD_1200 = 11;
+        BAUD_1800 = 12;
+        BAUD_2400 = 13;
+        BAUD_4800 = 14;
+        BAUD_9699 = 15;
+        BAUD_19200 = 16;
+        BAUD_38400 = 17;
+        BAUD_57600 = 18;
+        BAUD_76800 = 19;
+        BAUD_115200 = 20;
+    }
+    enum DataBits {
+        DATA_BITS_DONT_CHANGE = 0;
+        DATA_BITS_DEFAULT = 1; // depends on model; DATA_BITS_8 preferred
+        DATA_BITS_5 = 2;
+        DATA_BITS_6 = 3;
+        DATA_BITS_7 = 4;
+        DATA_BITS_8 = 5;
+    }
+    enum Parity {
+        PARITY_DONT_CHANGE = 0;
+        PARITY_DEFAULT = 1; // depends on model; PARITY_NO preferred
+        PARITY_NO = 2;
+        PARITY_EVEN = 3;
+        PARITY_ODD = 4;
+        PARITY_MARK = 5;
+        PARITY_SPACE = 6;
+    }
+    enum StopBits {
+        STOP_BITS_DONT_CHANGE = 0;
+        STOP_BITS_DEFAULT = 1; // depends on model; STOP_BITS_1 preferred
+        STOP_BITS_1 = 2;
+        STOP_BITS_2 = 3;
+    }
+
+    // write config request
+    message ReqWriteConfig {
+        BooleanSetting enabled = 1;
+        Baud baud = 2;
+        uint32 user_baud = 3;
+        DataBits data_bits = 4;
+        Parity parity = 5;
+        StopBits stop_bits = 6;
+        String64Setting name = 7 [(nanopb).max_size = 64];
+    }
+
+    // read and write config response
+    message RespConfig {
+        bool enabled = 1;
+        bool use_default_val_on_start = 2; // false: DONT_CHANGE
+        bool use_default_val_on_failure = 3; // false: DONT_CHANGE
+        bool default_val = 4; // start / failure
+        bool override_enabled = 5;
+        bool override_cancelable = 6;
+        string name = 7 [(nanopb).max_length = 64];
+    }
+
+    // tx request
+    message ReqTx {
+        bytes data = 1 [(nanopb).max_size = 400];
+    }
+
+    // tx response
+    message RespTx {
+        uint32 err = 1;
+    }
+
+    // rx request
+    message ReqRx {
+        uint32 min_len = 1; // transfer if at least minLen bytes are received
+        uint32 timeout_ms = 2; // transfer if timeout expires
+        uint32 aggregation_timeout_bit_times = 3; // transfer if end of packet is detected
+        uint32 max_len = 4; // limit data len in response
+    }
+
+    // rx response
+    message RespRx {
+        uint32 err = 1;
+        bytes data = 2 [(nanopb).max_size = 400];
+    }
+
+    enum MsgType {
+        TYPE_REQ_READ_CONFIG = 0;      // ReqChannel
+        TYPE_RESP_READ_CONFIG = 1;     // RespConfig
+        TYPE_REQ_WRITE_CONFIG = 2;     // ReqWriteConfig
+        TYPE_RESP_WRITE_CONFIG = 3;    // RespConfig
+        TYPE_REQ_RX = 4;              // ReqRx
+        TYPE_RESP_RX = 5;             // RespRx
+        TYPE_REQ_TX = 6;              // ReqTx
+        TYPE_RESP_TX = 7;             // RespTx
+    }
+
+    MsgType msgType = 1;
+    oneof payload {
+        // ReqChannel req_channel = 10;
+        ReqWriteConfig req_write_config = 11;
+        RespConfig resp_config = 12;
+        ReqTx req_tx = 13;
+        RespTx resp_tx = 14;
+        ReqRx req_rx = 15;
+        RespRx resp_rx = 16;
+    }
+}

@@ -1,0 +1,152 @@
+syntax = "proto3";
+
+import "shared.proto";
+import "nanopb.proto";
+
+// GO
+option go_package = "git-ima.europe.phoenixcontact.com/abacusgo/linkbusgo";
+
+// JAVA settings
+option java_multiple_files = false;
+option java_package = "com.phoenixcontact.emalyticscatanio.message";
+option java_outer_classname = "EmalyticsCatanIoUi";
+
+/* universal inputs***********************************************************/
+// type selection, inversion, disable, observe/cov, override
+
+enum UiType {
+    UI_TYPE_DONT_CHANGE = 0;
+    UI_TYPE_DEFAULT = 1; // depends on model; UI_TYPE_VOLTAGE preferred
+    UI_TYPE_AI_VOLTAGE = 2;
+    UI_TYPE_AI_CURRENT_0_20 = 3;
+    UI_TYPE_AI_RESISTOR_10K = 4;
+    UI_TYPE_AI_RESISTOR_180K = 5;
+    UI_TYPE_AI_TEMPERATURE_PT1000_DIN = 6;
+    UI_TYPE_AI_TEMPERATURE_PT1000_SAMA = 7;
+    UI_TYPE_AI_TEMPERATURE_NI1000_DIN = 8;
+    UI_TYPE_AI_TEMPERATURE_NI1000_SAMA = 9;
+    UI_TYPE_AI_TEMPERATURE_NI1000_LG = 10;
+    UI_TYPE_DI = 11;
+    UI_TYPE_COUNTER = 12;
+    UI_TYPE_AI_TEMPERATURE_NTC_10K = 13;
+    UI_TYPE_AI_TEMPERATURE_NTC_10K_PRE = 14;
+    UI_TYPE_AI_TEMPERATURE_NTC_20K = 15;
+    UI_TYPE_AI_CURRENT_4_20 = 16;
+}
+
+// write config request
+// PATCH coap://<ip>:<port>/ui/<channel>/cfg
+message UiCfgReq {
+    // general
+    BooleanSetting enabled = 1;
+    UiType type = 2; // UI
+    String64Setting name = 3;
+    BooleanSetting override_enabled = 4;
+    BooleanSetting override_cancelable = 5;
+
+    // signal
+    BooleanSetting inverted = 6; // DI
+    BooleanSetting open_contact = 7; // UI
+    LineSetting two_point_calibration = 8; // AI
+    CurveSetting characteristic_curve = 9; // AI
+    String16Setting unit = 10; // AI / DI
+    FloatSetting counter_scale = 11; // DI
+
+    // cov
+    FloatSetting cov_increment = 12; // AI / DI
+    Uint32Setting min_send_time_ms = 13; // AI / DI
+    Uint32Setting max_send_time_ms = 14; // AI / DI
+
+    // limits
+    FloatSetting minimum = 15; // AI
+    FloatSetting maximum = 16; // AI
+    FloatSetting lower_fault_level = 17; // AI
+    FloatSetting upper_fault_level = 18; // AI
+
+    // BooleanSetting debounced = 19; do not reuse!
+    String16Setting false_text = 20; // DI
+    String16Setting true_text = 21; // DI
+
+    BooleanSetting configured = 22;
+    BooleanSetting local_setup_enabled = 23;
+    TestStatus test_status = 24;
+}
+
+// read and write config response
+// response to GET coap://<ip>:<port>/ui/<channel>/cfg
+// response to PATCH coap://<ip>:<port>/ui/<channel>/cfg
+message UiCfgResp {
+    // general
+    bool enabled = 1;
+    UiType type = 2;
+    string name = 3 [(nanopb).max_length = 64];
+    bool override_enabled = 4;
+    bool override_cancelable = 5;
+
+    // signal
+    bool inverted = 6; // DI
+    bool open_contact = 7; // UI
+    Line two_point_calibration = 8; // AI
+    Curve characteristic_curve = 9; // AI
+    string unit = 10 [(nanopb).max_length = 16]; // AI / DI
+    float counter_scale = 11; // DI
+
+    // cov
+    float cov_increment = 12; // AI / DI
+    uint32 min_send_time_ms = 13; // AI / DI
+    uint32 max_send_time_ms = 14; // AI / DI
+
+    // limits
+    float minimum = 15; // AI
+    float maximum = 16; // AI
+    float lower_fault_level = 17; // AI
+    float upper_fault_level = 18; // AI
+
+    // bool debounced = 19; do not reuse!
+
+    string false_text = 20 [(nanopb).max_length = 16]; // DI
+    string true_text = 21 [(nanopb).max_length = 16]; // DI
+
+    bool configured = 22;
+    bool local_setup_enabled = 23;
+    TestStatus test_status = 24;
+}
+
+// UI request
+// PATCH coap://<ip>:<port>/ui/<channel>
+message UiReq {
+    // init value
+    Uint64Setting counter_init_val = 1; // DI
+    Uint32Setting init_on_time_s = 2; // DI
+
+    // override
+    OverrideAction override_action = 3;
+    uint32 override_duration_ms = 4; // duration of OVERRIDDEN status; 0 = unlimited
+    BooleanSetting digital_override_val = 5; // DI
+    FloatSetting analog_override_val = 6; // AI
+    Uint64Setting counter_override_val = 7; // DI
+}
+
+// response to PATCH coap://<ip>:<port>/ui/<channel>
+// response to GET coap://<ip>:<port>/ui/<channel>
+message UiResp {
+    // general
+    UiType type = 1; // UI
+    PointStatus status = 2;
+    IoErrorCode error_code = 3;
+    uint32 override_remaining_ms = 4;
+
+    // actual value
+    bool digital_val = 5; // DI
+    float analog_val = 6; // AI
+    uint64 counter_val = 7; // DI
+    uint32 on_time_s = 8; // DI
+    float sensor_val = 9; // AI
+
+    TestStatus test_status = 10;
+}
+
+// response to GET coap://<ip>:<port>/ui
+message UiRespAll {
+    repeated UiResp vals = 1;
+}

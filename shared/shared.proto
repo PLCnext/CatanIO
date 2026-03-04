@@ -1,0 +1,158 @@
+syntax = "proto3";
+
+import "nanopb.proto";
+
+// GO
+option go_package = "git-ima.europe.phoenixcontact.com/abacusgo/linkbusgo";
+
+// JAVA settings
+option java_multiple_files = false;
+option java_package = "com.phoenixcontact.emalyticscatanio.message";
+option java_outer_classname = "EmalyticsCatanIoShared";
+
+/* point commons *************************************************************/
+
+// status
+enum PointStatus {
+    STATUS_OK = 0; // value is valid
+    STATUS_FAILURE = 1; // hardware problem detected
+    STATUS_OVERRIDDEN = 2; // manual override
+    STATUS_DISABLED = 3; // out of service
+    STATUS_UNCONFIGURED = 4; // no valid configuration
+}
+
+enum IoErrorCode {
+    ERR_OK = 0;
+    // ERR_OVERRANGE = 1; do not reuse!
+    // ERR_UNDERRANGE = 2; do not reuse!
+    // ERR_BROKEN_WIRE = 3; do not reuse!
+    // ERR_SHORT_CIRCUIT = 4; do not reuse!
+    ERR_PERIPHERY = 5;
+
+    ERR_RES_HIGH = 10;
+    ERR_TEMP_HIGH = 11;
+    ERR_IN_VOLT_HIGH = 12;
+    ERR_IN_CURR_SHUNT_RES_HIGH = 13;
+    ERR_OUT_VOLT_HIGH = 14;
+    ERR_WARN_LIM_HIGH = 15;
+
+    ERR_TEMP_LOW = 20;
+    ERR_NEG_IN_VOLT = 21;
+    ERR_IN_CURR_SMALL = 22;
+    ERR_NEG_IN_CURR = 23;
+    ERR_NEG_IN_CURR_SENSOR_NOT_CONN = 24;
+    ERR_OUT_VOLT_SMALL = 25;
+    ERR_WARN_LIM_LOW = 26;
+
+    ERR_SENSOR_NOT_CONN = 30;
+    ERR_LOW_LEVEL_EXCEEDS_VOLT_LIMIT = 31;
+
+    ERR_OUT_OVERLOAD = 40;
+
+    ERR_VIRT_NULL = 50;
+    ERR_VIRT_ALARM = 51;
+    ERR_VIRT_STALE = 52;
+    ERR_VIRT_DOWN = 53;
+    ERR_VIRT_FAULT = 54;
+    ERR_VIRT_DISABLED = 55;
+}
+
+// override action
+enum OverrideAction {
+    OVERRIDE_ACTION_NONE = 0;
+    OVERRIDE_ACTION_START = 1;
+    OVERRIDE_ACTION_STOP = 2;
+    OVERRIDE_ACTION_CANCEL = 3;
+}
+
+enum TestStatus {
+    TEST_DONT_CHANGE = 0;
+    TEST_OPEN = 1;
+    TEST_PASSED = 2;
+    TEST_FAILED = 3;
+    TEST_BLOCKED = 4;
+    TEST_SKIPPED = 5;
+}
+
+// supporting point for characteristic curve  / correction line
+message SupportPoint {
+    float x = 1;
+    float y = 2;
+}
+
+message Line {
+    repeated SupportPoint vals = 1 [(nanopb).max_count = 2];
+}
+
+message Curve {
+    // repeated SupportPoint vals = 1 [(nanopb).max_count = 20, (nanopb).fixed_count = true]; do not reuse!
+    string name = 2 [(nanopb).max_length = 64];
+    repeated SupportPoint vals = 3 [(nanopb).max_count = 20];
+}
+
+// setting with default
+enum Setting {
+    SET_DONT_CHANGE = 0;
+    SET_DEFAULT = 1;
+    SET_VAL = 2;
+}
+
+// string setting 16 byte
+message String16Setting {
+    Setting setting = 1;
+    string val = 2 [(nanopb).max_length = 16];
+}
+
+// string setting 64 byte
+message String64Setting {
+    Setting setting = 1;
+    string val = 2 [(nanopb).max_length = 64];
+}
+
+// uint64 setting
+message Uint64Setting {
+    Setting setting = 1;
+    uint64 val = 2;
+}
+
+// uint32 setting
+message Uint32Setting {
+    Setting setting = 1;
+    uint32 val = 2;
+}
+
+// float setting
+message FloatSetting {
+    Setting setting = 1;
+    float val = 2;
+}
+
+// boolean setting with default
+enum BooleanSetting {
+    BOOLEAN_SET_DONT_CHANGE = 0;
+    BOOLEAN_SET_DEFAULT = 1;
+    BOOLEAN_SET_FALSE = 2;
+    BOOLEAN_SET_TRUE = 3;
+}
+
+message LineSetting {
+    Setting setting = 1;
+    repeated SupportPoint vals = 2 [(nanopb).max_count = 2];
+}
+
+message CurveSetting {
+    Setting setting = 1;
+    // repeated SupportPoint vals = 2 [(nanopb).max_count = 20, (nanopb).fixed_count = true]; do not reuse!
+    string name = 3 [(nanopb).max_length = 64];
+    repeated SupportPoint vals = 4 [(nanopb).max_count = 20];
+}
+
+message IoErrorCodeSetting {
+    Setting setting = 1;
+    IoErrorCode val = 2;
+}
+
+message Ipv4Setting {
+  Setting setting = 1;
+  bytes val = 2 [(nanopb).max_size = 4, (nanopb).fixed_length = true];
+}

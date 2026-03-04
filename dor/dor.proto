@@ -1,0 +1,102 @@
+syntax = "proto3";
+
+import "shared.proto";
+import "nanopb.proto";
+
+// GO
+option go_package = "git-ima.europe.phoenixcontact.com/abacusgo/linkbusgo";
+
+// JAVA settings
+option java_multiple_files = false;
+option java_package = "com.phoenixcontact.emalyticscatanio.message";
+option java_outer_classname = "EmalyticsCatanIoDor";
+
+/* relay outputs *************************************************************/
+// inversion, disable, override, cov, default
+
+// write config request
+// PATCH coap://<ip>:<port>/dor/<channel>/cfg
+message DorCfgReq {
+    // general
+    BooleanSetting enabled = 1;
+    String64Setting name = 2;
+    BooleanSetting override_enabled = 3;
+    BooleanSetting override_cancelable = 4;
+
+    // signal
+    BooleanSetting inverted = 5; // DO
+    BooleanSetting use_default_val_on_start = 6; // DO // false: DONT_CHANGE
+    BooleanSetting use_default_val_on_failure = 7; // DO // false: DONT_CHANGE
+    BooleanSetting digital_default_val = 8; // DO // start / failure
+
+    String16Setting false_text = 9; // DO
+    String16Setting true_text = 10; // DO
+
+    BooleanSetting configured = 11;
+    BooleanSetting local_setup_enabled = 12;
+    TestStatus test_status = 13;
+}
+
+// read and write config response
+// response to GET coap://<ip>:<port>/dor/<channel>/cfg
+// response to PATCH coap://<ip>:<port>/dor/<channel>/cfg
+message DorCfgResp {
+    // general
+    bool enabled = 1;
+    string name = 2 [(nanopb).max_length = 64];
+    bool override_enabled = 3;
+    bool override_cancelable = 4;
+
+    // signal
+    bool inverted = 5; // DO
+    bool use_default_val_on_start = 6; // DO // false: DONT_CHANGE
+    bool use_default_val_on_failure = 7; // DO // false: DONT_CHANGE
+    bool digital_default_val = 8; // DO // start / failure
+
+    string false_text = 9 [(nanopb).max_length = 16]; // DO
+    string true_text = 10 [(nanopb).max_length = 16]; // DO
+
+    bool configured = 11;
+    bool local_setup_enabled = 12;
+    TestStatus test_status = 13;
+}
+
+// relay request
+// PATCH coap://<ip>:<port>/dor/<channel>
+message DorReq {
+    // write value
+    BooleanSetting digital_set_val = 1; // DO
+
+    // init value
+    Uint64Setting counter_init_val = 5; // DO
+    Uint32Setting init_on_time_s = 6; // DO
+
+    // override
+    OverrideAction override_action = 2;
+    uint32 override_duration_ms = 4; // duration of OVERRIDDEN status; 0 = unlimited
+    BooleanSetting digital_override_val = 3; // DO
+}
+
+// response to PATCH coap://<ip>:<port>/dor/<channel>
+// response to GET coap://<ip>:<port>/dor/<channel>
+message DorResp {
+    // general
+    PointStatus status = 1;
+    IoErrorCode error_code = 2;
+    uint32 override_remaining_ms = 3;
+
+    // actual value
+    bool digital_val = 4; // may differ on override
+    uint64 counter_val = 5;
+    uint32 on_time_s = 6;
+
+    // set value
+    bool digital_set_val = 7;
+
+    TestStatus test_status = 8;
+}
+
+// response to GET coap://<ip>:<port>/dor
+message DorRespAll {
+    repeated DorResp vals = 1;
+}

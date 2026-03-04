@@ -1,0 +1,485 @@
+syntax = "proto3";
+
+import "shared.proto";
+import "nanopb.proto";
+
+// GO
+option go_package = "git-ima.europe.phoenixcontact.com/abacusgo/linkbusgo";
+
+// JAVA settings
+option java_multiple_files = false;
+option java_package = "com.phoenixcontact.emalyticscatanio.message";
+option java_outer_classname = "EmalyticsCatanIoSys";
+
+
+/* sys/cfg ********************************************************************/
+// write config request
+// PATCH coap://<ip>:<port>/sys/cfg
+message SysCfgReq {
+    Uint32Setting ctrl_connect_failure_timeout_s = 1;
+    String64Setting name = 2;
+    BooleanSetting rs485_ch1_termination = 3;
+    BooleanSetting rs485_ch1_biasing = 4;
+    BooleanSetting rs485_ch2_termination = 5;
+    BooleanSetting rs485_ch2_biasing = 6;
+    Uint64Setting password1 = 7;
+    Uint64Setting password2 = 8;
+    Uint64Setting password3 = 9;
+    // Uint64Setting linkbus_address = 10; // do not reuse!
+    Language language = 11;
+    BooleanSetting local_setup_enabled = 12;
+}
+
+// read and write config response
+// response to GET coap://<ip>:<port>/sys/cfg
+// response to PATCH coap://<ip>:<port>/sys/cfg
+message SysCfgResp {
+    uint32 ctrl_connect_failure_timeout_s = 1;
+    string name = 2 [(nanopb).max_length = 64];
+    bool rs485_ch1_termination = 3;
+    bool rs485_ch1_biasing = 4;
+    bool rs485_ch2_termination = 5;
+    bool rs485_ch2_biasing = 6;
+    uint64 password1 = 7;
+    uint64 password2 = 8;
+    uint64 password3 = 9;
+    uint64 linkbus_address = 10;
+    Language language = 11;
+    bool local_setup_enabled = 12;
+}
+
+enum Language {
+    DONT_CHANGE = 0;
+    EN_US = 1;
+    DE_DE = 2;
+    FR_FR = 3;
+    IT_IT = 4;
+}
+
+/* sys/discovery **************************************************************/
+// on CTRL
+message ReqDiscover {
+    enum DiscoverOption {
+        OPTION_GET_STATUS = 0;
+        OPTION_START_READ_ONLY = 1;
+        OPTION_START_ADDRESS_ALL = 2;
+        OPTION_GET_RESULT = 3;
+        OPTION_ABORT = 4;
+    }
+
+    DiscoverOption option = 1;
+}
+
+message RespDiscover {
+    enum ErrorCodeEntry {
+        ERR_OK = 0;
+        ERR_INFO = 1;
+        ERR_TABLE_LEN = 2;
+        ERR_TABLE_GET = 3;
+    }
+
+    enum ErrorCode {
+        ERR_HOST_OK = 0;
+        ERR_HOST_INFO = 1;
+        ERR_HOST_TABLE_LEN = 2;
+        ERR_HOST_TABLE_GET = 3;
+        ERR_HOST_GET_IP_SETTINGS = 4;
+        ERR_HOST_SET_IP_SETTINGS = 5;
+    }
+
+    enum StatusCode {
+        STATUS_IDLE = 0;        // Status equals DONE=true and ABORTED=true
+        STATUS_BUSY = 1;
+    }
+
+    message DiscoverEntry {
+        bytes ip_address = 1 [(nanopb).max_size = 4, (nanopb).fixed_length = true];
+        // string model_name = 2 [(nanopb).max_length = 64]; do not reuse!
+        // uint64 serial_no = 3; do not reuse!
+        ErrorCodeEntry error = 4;
+    }
+
+    StatusCode status = 1;
+    uint32 progress = 2;
+    repeated DiscoverEntry discover_entries = 3 [(nanopb).max_count = 32];
+    ErrorCode error = 4;
+}
+
+/* sys/audio **************************************************************/
+// on CTRL
+message ReqAudio {
+    // hw_insert/remove are OS internal sounds!
+    enum Action {
+        FAILURE = 0;
+        SUCCESS = 1;
+        IDENTIFY = 2;
+        ALARM_1 = 3;
+        ALARM_2 = 4;
+        ALARM_3 = 5;
+        BUTTON_PRESSED = 6;
+        BUTTON_RELEASED = 7;
+        PLAY_SEQUENCE = 8;
+        MUTE = 9;
+        UNMUTE = 10;
+    }
+
+    Action action = 1;
+    bytes sequence = 2 [(nanopb).max_size = 131, (nanopb).fixed_length = true];
+}
+
+message RespAudio {
+
+    enum Status {
+        STATUS_IDLE = 0;
+        STATUS_BUSY = 1;
+    }
+
+    enum ErrorCode {
+        ERR_OK = 0;
+        ERR_PLAYING = 1;
+        ERR_LOW_PRIO = 2;
+        ERR_MUTE = 3;
+        ERR_UNMUTE = 4;
+    }
+
+    Status status = 1;
+    ErrorCode error = 2;
+}
+
+/* sys/signal **************************************************************/
+
+message RespSignal {
+    bool identify = 1;
+    bool update = 2;
+    bool knx_prog = 3;
+}
+
+/* sys/load **************************************************************/
+// on CTRL
+
+message RespLoad {
+    uint32 daemon_load = 1;
+    uint32 station_load = 2;
+}
+
+/* sys/ip **************************************************************/
+// on CTRL
+
+enum AdapterId {
+    EN0 = 0;
+    EN1 = 1;
+}
+
+message Ipv4 {
+  bytes ip_address = 1 [(nanopb).max_size = 4, (nanopb).fixed_length = true];             // IPv4 address of the adapter.
+  uint32 subnet_mask_cidr = 2;                                                            // Subnet mask for the IPv4 address in CIDR format, 0..32, e.g. /24.
+  bytes default_gateway = 3 [(nanopb).max_size = 4, (nanopb).fixed_length = true];        // Default gateway for IPv4 traffic.
+  bool is_dhcp = 4;                                                                       // true: DHCP assigned address, false: static address
+}
+
+message Ipv6 {
+  bytes ip_address = 1 [(nanopb).max_size = 16, (nanopb).fixed_length = true];             // IPv6 address of the adapter.
+  uint32 prefix_length_cidr = 2;                                                           // Prefix Length for the IPv6 address in CIDR format, 0..128, e.g. /64.
+  bytes default_gateway = 3 [(nanopb).max_size = 16, (nanopb).fixed_length = true];        // Default gateway for IPv6 traffic.
+  bool is_dhcp = 4;                                                                        // true: DHCP assigned address, false: static address
+}
+
+message Adapter {  
+  AdapterId id = 1;              // Adapter identifier
+  bool enabled = 2;              // true: Adapter is enabled
+  bool can_disable = 3;          // true: "enable" can be written (what is not the case for en0)
+  bool is_readonly = 4;          // true: "ipv4", "enabled", and "ipv6_enabled" can not be written
+  bool ipv6_enabled = 5;         // true: "ipv6" is applicable, false: "ipv4" is applicable
+  bool can_disable_ipv6 = 6;     // true: "ipv6_enabled" can be written
+  Ipv4 ipv4 = 7;                 // ipv4 configuration data
+  Ipv6 ipv6 = 8;                 // ipv6 configuration data
+}
+
+message SetAdapter {  
+  AdapterId id = 1;                    // Adapter identifier
+  BooleanSetting enable = 2;           // manipulate Adapter->enabled
+  BooleanSetting ipv6_enable = 3;      // manipulate Adapter->ipv6_enabled
+  Ipv4Setting ip_address = 5;          // manipulate Adapter->ipv4->ip_address
+  Uint32Setting subnet_mask_cidr = 6;  // manipulate Adapter->ipv4->subnet_mask_cidr
+  Ipv4Setting default_gateway = 7;     // manipulate Adapter->ipv4->default_gateway; active setting to 0.0.0.0 removes the default gateway
+  BooleanSetting set_dhcp = 8;         // manipulate Adapter->ipv4->is_dhcp
+}
+
+// read ip config
+// response to GET coap://<ip>:<port>/sys/ip
+// response to PATCH coap://<ip>:<port>/sys/ip
+message RespTcpIpSettings {
+  string hostname = 1  [(nanopb).max_length = 64];          // Hostname for the system.
+  repeated Adapter adapters = 2  [(nanopb).max_count = 2];  // List of network adapters with their settings
+  bool eee = 3;                                             // Indicates if adapters are running in eco mode
+}
+
+// write ip config request
+// PATCH coap://<ip>:<port>/sys/ip
+message ReqTcpIpSettings {
+  repeated SetAdapter adapters = 1  [(nanopb).max_count = 2];  // List of network adapters with their settings.
+}
+
+/* sys/time ***********************************************************************/
+// on CTRL
+
+// read time config
+// response to GET coap://<ip>:<port>/sys/time
+// response to PATCH coap://<ip>:<port>/sys/time
+message RespTime {
+  uint64 local_date_time = 1; // The current local time in Unix timestamp format.
+}
+
+// write time config
+// PATCH coap://<ip>:<port>/sys/time
+message ReqTime {
+  Uint64Setting local_date_time = 1; // manipulate local_date_time
+}
+
+
+/* sys ***********************************************************************/
+message SysMessage {
+
+    // write read info response
+    message ReqRespInfo {
+        // ModelData (fix_data.proto)
+        string model_name = 1 [(nanopb).max_length = 64];
+        string model_number = 2 [(nanopb).max_length = 16];
+        // uint32 model_revision = 3; do not reuse!
+        // string hardware_revision = 4 [(nanopb).max_length = 10]; do not reuse!
+
+        // DeviceData (fix_data.proto)
+        string serial_no = 5 [(nanopb).max_length = 18];
+        bytes mac_id = 6 [(nanopb).max_size = 6, (nanopb).fixed_length = true];
+        uint32 mac_id_count = 7;
+        string host_id = 8 [(nanopb).max_length = 32];
+        // string uuid_type = 9 [(nanopb).max_length = 36]; do not reuse!
+        // string uuid_plc_next = 10 [(nanopb).max_length = 36]; do not reuse!
+        // string g_tin = 11 [(nanopb).max_length = 14]; do not reuse!
+        string dali_serial_no = 12 [(nanopb).max_length = 8];
+
+        string model_revision = 13 [(nanopb).max_length = 2];
+        uint32 hardware_revision = 14;
+        bytes uuid_plc_next = 15 [(nanopb).max_size = 16, (nanopb).fixed_length = true];
+        bytes g_tin = 16 [(nanopb).max_size = 6, (nanopb).fixed_length = true];
+        bytes knx_serial_no = 17 [(nanopb).max_size = 6, (nanopb).fixed_length = true];
+        bytes dali_hardware_version = 18 [(nanopb).max_size = 2, (nanopb).fixed_length = true];
+        string bldt = 19 [(nanopb).max_length = 14];
+    }
+
+    message RespFwUpdateInfo {
+
+        message FwImageInfo {
+            string bldt = 1 [(nanopb).max_length = 14];
+            uint32 major = 2;
+            uint32 minor = 3;
+            uint32 revision = 4;
+            uint32 build = 5;
+            uint32 size = 6;
+        }
+
+        enum BlAction {
+            BL_ACTION_NO = 0;
+            BL_ACTION_COPY_UPDATE = 1;
+            BL_ACTION_AUTO_REPAIR = 2;
+            BL_ACTION_MANUAL_REPAIR = 3;
+            BL_ACTION_CMD_COPY_FAILSAFE = 4;
+            BL_ACTION_CMD_SAVE_FAILSAFE = 5;
+        }
+
+        string bldt = 1 [(nanopb).max_length = 14];
+        uint32 min_major = 2;
+        uint32 min_minor = 3;
+        FwImageInfo fw_primary = 4;
+        FwImageInfo fw_update = 5;
+        FwImageInfo fw_failsafe = 6;
+        FwImageInfo fw_display = 7;
+        BlAction last_bl_action = 8;
+        uint32 bl_major = 9;
+        uint32 bl_minor = 10;
+        uint32 ext_uif_hw_version = 11;
+        uint32 reset_cause = 12;
+    }
+
+    message RequBlCmd {
+        enum BlCmd { // check success by verifying RespFwUpdateInfo.last_bl_action
+            BL_CMD_NO = 0;
+            BL_CMD_COPY_FAILSAFE = 1;
+            BL_CMD_SAVE_FAILSAFE = 2;
+        }
+        BlCmd bl_cmd = 1;
+    }
+
+    message ReqRespDt4i {
+        string dt4i_url = 1 [(nanopb).max_length = 256];
+    }
+
+    // read status response
+    message RespStatus {
+        uint32 points_in_failure = 1; // number of points in FAILURE status
+        uint32 points_overridden = 2; // number of points on OVERRIDDEN status
+        bool display_connected = 3;
+        bool ctrl_connected = 4;
+        bool button_pressed = 5;
+        bool ctrl_connect_failure = 6;
+    }
+
+    // set display connection status
+    message ReqDispConnStatus {
+        bool display_connected = 1;
+    }
+
+    // login request
+    message ReqLogin {
+        string user_name = 1 [(nanopb).max_length = 16];
+        string pw_hash = 2 [(nanopb).max_length = 64];
+    }
+
+    message ReqRespUiCal {
+        //UiCalData
+        double res_9k6_ai = 1;
+        double res_9k6_bi = 2;
+        double res_9k6_au = 3;
+        double res_9k6_bu = 4;
+        double res_180k_ai = 5;
+        double res_180k_bi = 6;
+        double res_180k_au = 7;
+        double res_180k_bu = 8;
+    }
+
+    enum UserGroup {
+        USER_GROUP_UNAUTHENTICATED = 0; // without login via display
+        USER_GROUP_USER = 1;            // user via display
+        USER_GROUP_SEVICE = 2;          // service personal via display
+        USER_GROUP_CTRL = 3;            // controller
+        USER_GROUP_ADMIN = 4;           // admin via display
+    }
+
+    enum ErrorCode {
+        ERR_OK = 0;
+        ERR_NOK = 1;
+    }
+
+    // login response
+    message RespLogin {
+        ErrorCode code = 1;
+        UserGroup user_group = 2;
+        string rights = 3 [(nanopb).max_length = 64];
+    }
+
+    message RespNeighborInfo {
+        message NeighborEntry {
+            uint32 local_phy = 1;
+            uint32 remote_phy = 2;
+            bytes remote_mac = 3 [(nanopb).max_size = 6, (nanopb).fixed_length = true];
+        }
+
+        bytes local_mac = 1 [(nanopb).max_size = 6, (nanopb).fixed_length = true];
+        repeated NeighborEntry neighbor_entries = 2 [(nanopb).max_count = 32];
+    }
+
+    message ReqMemoryCmd {
+        enum MemCmd {
+            MEM_CMD_NO = 0;
+            MEM_CMD_CLEAR_CFG = 1;
+            MEM_CMD_CLEAR_RUN = 2;
+            MEM_CMD_CLEAR_ALL = 3;
+            MEM_CMD_SET_FIX_UNPROTECT = 4;
+            MEM_CMD_SET_FIX_PROTECT_REVERSIBLE = 5;
+            MEM_CMD_SET_FIX_PROTECT_PERMANENT = 6;
+            MEM_CMD_GET_FIX_PROTECT_LEVEL = 7;
+        }
+        MemCmd mem_cmd = 1;
+    }
+
+    message RespMemoryCmd {
+        enum FixProtectLevel {
+            FIX_UNPROTECT = 0;
+            FIX_PROTECT_REVERSIBLE = 1;
+            FIX_PROTECT_PERMANENT = 2;
+        }
+        FixProtectLevel fix_protect_level = 1;
+    }
+
+    message ReqIdentify {
+        uint32 duration_s = 1; // 0 == off
+    }
+
+    message ReqLedCtrl {
+        enum LedCmd {
+            LED_CMD_NO = 0;
+            LED_CMD_UPDATE_ON = 1;
+            LED_CMD_UPDATE_OFF = 2;
+            LED_CMD_STATUS = 3;
+            LED_CMD_PROG_ON = 4;
+            LED_CMD_PROG_OFF = 5;
+        }
+        LedCmd led_cmd = 1;
+        uint32 daemon_load = 2;
+        uint32 station_load = 3;
+    }
+
+    message ReqRespEmpty {
+    }
+
+    enum MsgType {
+        TYPE_NONE = 0;                // default ReqRespEmpty
+
+        TYPE_REQ_READ_INFO= 1;        // ReqRespEmpty
+        TYPE_RESP_READ_INFO= 2;       // ReqRespInfo
+
+        TYPE_REQ_READ_STATUS= 3;      // ReqRespEmpty
+        TYPE_RESP_READ_STATUS= 4;     // RespStatus
+
+        TYPE_REQ_WRITE_INFO = 5;      // ReqRespInfo
+
+        TYPE_REQ_READ_UI_CAL = 6;     // ReqRespEmpty
+        TYPE_REQ_WRITE_UI_CAL = 7;    // ReqRespUiCal
+        TYPE_RESP_READ_UI_CAL = 8;    // ReqRespUiCal
+
+        TYPE_REQ_REBOOT = 9;          // ReqRespEmpty or RequBlCmd
+
+        TYPE_REQ_NEIGHBORS = 10;      // ReqRespEmpty
+        TYPE_RESP_NEIGHBORS = 11;     // RespNeighborInfo
+
+        TYPE_REQ_WRITE_DT4I = 12;     // ReqRespDt4i
+        TYPE_REQ_READ_DT4I = 13;      // ReqRespEmpty
+        TYPE_RESP_READ_DT4I = 14;     // ReqRespDt4i
+
+        TYPE_RESP_REBOOT = 15;        // ReqRespEmpty
+
+        // TYPE_REQ_WRITE_CONFIG = 16; do not reuse!
+        // TYPE_REQ_READ_CONFIG = 17; do not reuse!
+        // TYPE_RESP_READ_CONFIG = 18; do not reuse!
+
+        TYPE_REQ_WRITE_DISP_CONN_STATUS = 19;  // ReqDispConnStatus
+        TYPE_RESP_WRITE_DISP_CONN_STATUS = 20; // ReqRespEmpty
+
+        TYPE_REQ_READ_FW_UPDATE_INFO = 21; // ReqRespEmpty
+        TYPE_RESP_READ_FW_UPDATE_INFO = 22; // RespFwUpdateInfo
+
+        TYPE_REQ_MEMORY_CMD = 23;     // ReqMemoryCmd
+        TYPE_REQ_IDENTIFY = 24;       // ReqIdentify
+        TYPE_REQ_START_DISCOVERY = 25; // ReqRespEmpty
+        TYPE_REQ_LED_CTRL = 26;       // ReqLedCtrl
+        TYPE_RESP_MEMORY_CMD = 27; // RespMemoryCmd
+    }
+
+    MsgType msg_type = 1;
+    oneof payload {
+        ReqRespEmpty req_resp_empty = 10;
+        ReqRespInfo req_resp_info = 11;
+        RespStatus resp_status = 12;
+        ReqRespUiCal req_resp_ui_cal = 13;
+        RespNeighborInfo resp_neighbor_info = 14;
+        ReqRespDt4i req_resp_dt4i = 15;
+        // ReqRespConfig req_resp_config = 16; do not reuse!
+        ReqDispConnStatus req_disp_conn_status = 17;
+        RequBlCmd req_bl_cmd = 18;
+        RespFwUpdateInfo resp_fw_update_info = 19;
+        ReqMemoryCmd req_mem_cmd = 20;
+        ReqLedCtrl req_led_ctrl = 21;
+        ReqIdentify req_identify = 22;
+        RespMemoryCmd resp_mem_cmd = 23;
+    }
+}

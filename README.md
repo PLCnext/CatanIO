@@ -31,7 +31,7 @@ Product website: http://www.phoenixcontact.net/product/1818583
 
 Module: CATAN DALI4 DOI8  \
 Description: Dali module \
-Article number: Comming soon \
+Article number: Comming soon, under development \
 Product website: 
 
 ## Directory Descriptions

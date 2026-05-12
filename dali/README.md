@@ -1,6 +1,8 @@
 
 # 📘 CatanIO – API Documentation for DALI
 
+**The module is currently under development; this description is a preliminary draft.**
+<!--
 ## Overview
 This API defines the configuration and control of **DALI networks** via **CoAP**.  
 Communication is handled using **Protocol Buffers** messages.
@@ -127,3 +129,4 @@ Used in: `DaliCmd.ReqGear.param.addr_option`
 
 
 
+-->

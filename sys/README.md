@@ -34,7 +34,6 @@ The operation type is defined by `msg_type`; the corresponding payload is provid
 |---|---|---|
 |GET|`coap://<ip>:<port>/sys/cfg`|Read system configuration|
 |PATCH|`coap://<ip>:<port>/sys/cfg`|Write system configuration|
-|POST|`coap://<ip>:<port>/sys/discovery`|Start device discovery|
 |POST|`coap://<ip>:<port>/sys/discovery`|Control discovery process|
 |POST|`coap://<ip>:<port>/sys/audio`|Play system or alarm sounds|
 |GET|`coap://<ip>:<port>/sys/signal`|Read system signal status|

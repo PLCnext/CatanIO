@@ -5,16 +5,38 @@ Within this environment, the container can access and make use of selected syste
 
 The following interfaces can be utilized by an OCI container as part of the application. In order to enable their usage, the corresponding settings should be configured accordingly.
 
-For more information see: https://github.com/PLCnext/PLCnextAppExamples
+For more information see: 
+* https://github.com/PLCnext/PLCnextAppExamples
+* https://github.com/PLCnext/App-Info-Schema
 
-## Podman Quadlet recommendation for Catan C1
+## Podman Quadlet and compose recommendation for Catan C1
 
-### Firmware requirements
+### Permissions
 
-Necessary to pass system permissions to the container. The app in the container has to run without root rights.
+All interface have permissions for user `admin` and group `plcnext` for individuell use and `app_user` for PLCnext Store apps. 
 
-* GroupAdd=keep-groups
-* UserNS=keep-id
+Necessary to pass system permissions to the container.
+
+For compose: 
+
+```yaml
+userns_mode: keep-id
+user: 1002:1002
+```
+
+- The `admin` user has UID `1002`
+- The `plcnext` group has GID `1002`
+- `keep-id` ensures correct mapping between host and container users
+
+**Important for PLCnext apps:**
+- The `app_user` must use UID `1001`
+- The group (`plcnext`) remains GID `1002`
+
+For Quadlet: 
+```yaml
+User=1002:1002
+UserNS=keep-id
+```
 
 ### Network
 
@@ -30,8 +52,17 @@ Only for Codemeter Server
 
 For accessing the two RS485 interfaces.
 
-* AddDevice=/dev/ttymxc2
+RS485(1):
 * AddDevice=/dev/ttymxc3
+
+RS485(2):
+* AddDevice=/dev/ttymxc2
+
+### USB interface
+
+USB serial devices are added to:
+
+* /dev/usb-devices
 
 ## System ressources Catan C1
 

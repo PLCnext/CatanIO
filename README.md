@@ -20,7 +20,7 @@ Article number: 1886438  \
 Product website: http://www.phoenixcontact.net/product/1886438
 
 Module: CATAN DOR6 UI8 \
-Description: Relay module
+Description: Relay module \
 Article number: 1371364 \
 Product website: http://www.phoenixcontact.net/product/1371364
 
@@ -34,40 +34,34 @@ Description: Dali module \
 Article number: Comming soon, under development \
 Product website: 
 
+## Addons
+
+Module: CATAN CONTROL PANEL  \
+Description: Display \
+Article number: 1371366 \
+Product website: http://www.phoenixcontact.net/product/1371366
+
 ## Directory Descriptions
 
 apps/
 * Recommendations for app development on Catan C1
 
-com/
-* RS485 settings and Protobuf for deactivating communication functions
+changelog/
+* feature changelog
+* The full changelog can be found in the firmware archive on the product website.
 
-dali/
-* Protobuf files and README for DALI-specific devices
+examples_container/
+* Container deployment examples
 
-doi/
-* Digital Input and Digital Output
-* Applies to all modules that support this type
-
-dor/
-* Relay outputs
-* Module-specific for the DOR module
-
-shared/
-* Shared Protobuf definitions for data types
-* Applies to all modules
-
-sys/
-* System properties
-* Applies to all modules
-
-ui/
-* Universal Input
-* Applies to all modules with this type
-
-uoi/
-* Universal Output and Digital Input
-* Applies to all modules with this type
+protobuf/
+* `com/` RS485 settings and Protobuf for deactivating communication functions
+* `dali/`Protobuf files and README for DALI-specific devices
+* `doi/` Digital Input and Digital Output
+* `dor/` Relay outputs
+* `shared/` Shared Protobuf definitions for data types
+* `sys/` System properties
+* `ui/` Universal Input
+* `uoi/`Universal Output and Digital Input
 
 ## General API Information
 
@@ -91,8 +85,6 @@ States can represent, among other things:
 
 The states are implemented in a type-based manner and are therefore consistent across all modules.
 
-
-
 ## Protobuf Basics
 
 The Protobuf files are not structured per module, but are shared across all modules.
@@ -103,13 +95,17 @@ They describe functional types, states, and properties – not individual hardwa
 
 ### Examples
 
-- sys.proto
+- sys,shared.proto
   Applies to all devices and modules
   Contains system-wide properties (e.g. identity, status, basic functionality)
 
 - dor.proto
   Applies exclusively to the relay module (DOR)
   Contains only relay-specific functions and states
+
+- ui,uoi,doi.proto
+  Applies to all devices and modules that provide the corresponding channels.
+  Contains IO specific functions and states
 
 ### Catan C1
 

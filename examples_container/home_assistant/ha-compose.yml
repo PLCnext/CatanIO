@@ -1,0 +1,21 @@
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: "ghcr.io/home-assistant/home-assistant:stable"
+    volumes:
+      - ~/config:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+# USB serial devices      
+      - /dev/usb-devices:/dev/usb-devices
+# RS485(1) and RS485(2)      
+    devices:
+      - /dev/ttymxc2:/dev/ttymxc2
+      - /dev/ttymxc3:/dev/ttymxc3  
+    restart: unless-stopped
+    network_mode: host
+# Permissions for the admin user    
+    userns_mode: keep-id
+    user: 1002:1002
+    environment:
+      TZ: Europe/Amsterdam

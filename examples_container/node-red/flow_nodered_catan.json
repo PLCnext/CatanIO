@@ -1,0 +1,1690 @@
+[
+    {
+        "id": "933937f791348941",
+        "type": "tab",
+        "label": "Config IOs",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "fd69e47b46404d90",
+        "type": "tab",
+        "label": "Read IOs",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "11fa33973bfd05e7",
+        "type": "tab",
+        "label": "Write IOs",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "083a74d702218435",
+        "type": "protobuf_file",
+        "name": "",
+        "protopath": "/data/ui.proto",
+        "watchFile": true,
+        "keepCase": false
+    },
+    {
+        "id": "085780a9e5defaa5",
+        "type": "inject",
+        "z": "933937f791348941",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 100,
+        "wires": [
+            [
+                "734aecdab1550ec3"
+            ]
+        ]
+    },
+    {
+        "id": "734aecdab1550ec3",
+        "type": "function",
+        "z": "933937f791348941",
+        "name": "UI-Config",
+        "func": "// Konfigurationen für die verschiedenen IOs definieren\n\n// UI_TYPE_DONT_CHANGE = 0;\n// UI_TYPE_DEFAULT = 1; // depends on model; UI_TYPE_VOLTAGE preferred\n// UI_TYPE_AI_VOLTAGE = 2;\n// UI_TYPE_AI_CURRENT_0_20 = 3;\n// UI_TYPE_AI_RESISTOR_10K = 4;\n// UI_TYPE_AI_RESISTOR_180K = 5;\n// UI_TYPE_AI_TEMPERATURE_PT1000_DIN = 6;\n// UI_TYPE_AI_TEMPERATURE_PT1000_SAMA = 7;\n// UI_TYPE_AI_TEMPERATURE_NI1000_DIN = 8;\n// UI_TYPE_AI_TEMPERATURE_NI1000_SAMA = 9;\n// UI_TYPE_AI_TEMPERATURE_NI1000_LG = 10;\n// UI_TYPE_DI = 11;\n// UI_TYPE_COUNTER = 12;\n// UI_TYPE_AI_TEMPERATURE_NTC_10K = 13;\n// UI_TYPE_AI_TEMPERATURE_NTC_10K_PRE = 14;\n// UI_TYPE_AI_TEMPERATURE_NTC_20K = 15;\n// UI_TYPE_AI_CURRENT_4_20 = 16;\n\n// -----------------------------------------\n// Configure Type with number from above\nconst configurations = [\n    { id: 1, enabled: 3, name: \"1\", configured: 3, type: 2, covIncrement: 1},  \n    { id: 2, enabled: 3, name: \"2\", configured: 3, type: 2, covIncrement: 1},\n    { id: 3, enabled: 3, name: \"3\", configured: 3, type: 11, covIncrement: 1}, \n    { id: 4, enabled: 3, name: \"4\", configured: 3, type: 11, covIncrement: 1},\n    { id: 5, enabled: 3, name: \"5\", configured: 3, type: 5, covIncrement: 1},  \n    { id: 6, enabled: 3, name: \"6\", configured: 3, type: 5, covIncrement: 1},\n    { id: 7, enabled: 3, name: \"7\", configured: 3, type: 6, covIncrement: 1},\n    { id: 8, enabled: 3, name: \"8\", configured: 3, type: 2, covIncrement: 1}\n];\n\n// -----------------------------------------\n\nconst messages = configurations.map(cfg => {\n    return {\n        url: `coap://169.254.253.1/ui/${cfg.id}/cfg`,\n        protobufType: \"Catan.Ui.UiCfgReq\",\n        payload: {\n            \"type\": cfg.type,\n            \"enabled\": cfg.enabled,\n            \"name\": {\n                \"val\": cfg.name,\n                \"setting\": 2 \n            },\n            \"covIncrement\": {\n                \"val\": cfg.covIncrement,\n                \"setting\": 2\n            },\n            \"configured\": cfg.configured\n        }\n    };\n});\n\nreturn [ messages ];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 260,
+        "y": 100,
+        "wires": [
+            [
+                "8e26a2a01303b7d6"
+            ]
+        ]
+    },
+    {
+        "id": "d77b5d4ac6922599",
+        "type": "debug",
+        "z": "933937f791348941",
+        "name": "debug 2",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "ea6163d8e6433344",
+        "type": "inject",
+        "z": "933937f791348941",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 280,
+        "wires": [
+            [
+                "55b9130cd7c16c93"
+            ]
+        ]
+    },
+    {
+        "id": "55b9130cd7c16c93",
+        "type": "function",
+        "z": "933937f791348941",
+        "name": "DOI-Config",
+        "func": "// Example: Configuration Universal Output / Inputs\n// Catan C1 Index 9 to 12\n\n//    UOI_TYPE_DONT_CHANGE = 0;\n//    UOI_TYPE_DEFAULT = 1;\n//    UOI_TYPE_DO = 2;\n//    UOI_TYPE_DI = 3;\n//    UOI_TYPE_COUNTER = 4;\n\n// -----------------------------------------\n// Configure Type with number from above\nconst configurations = [\n    { id: 9, enabled: 3, name: \"9\", configured: 3, type: 2 },  \n    { id: 10, enabled: 3, name: \"10\", configured: 3, type: 2 },\n    { id: 11, enabled: 3, name: \"11\", configured: 3, type: 2 }, \n    { id: 12, enabled: 3, name: \"12\", configured: 3, type: 2 }\n];\n\n// -----------------------------------------\n\nconst messages = configurations.map(cfg => {\n    return {\n        url: `coap://169.254.253.1/doi/${cfg.id}/cfg`,\n        protobufType: \"Catan.Doi.UoiCfgReq\",\n        payload: {\n            \"type\": cfg.type,\n            \"enabled\": cfg.enabled,\n            \"name\": {\n                \"val\": cfg.name,\n                \"setting\": 2\n            },\n            \"configured\": cfg.configured\n        }\n    };\n});\n\nreturn [ messages ];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 280,
+        "wires": [
+            [
+                "203ebf12e8730e92"
+            ]
+        ]
+    },
+    {
+        "id": "a28d7f30a4c23c59",
+        "type": "inject",
+        "z": "933937f791348941",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 460,
+        "wires": [
+            [
+                "750fe52f6638b5ba"
+            ]
+        ]
+    },
+    {
+        "id": "750fe52f6638b5ba",
+        "type": "function",
+        "z": "933937f791348941",
+        "name": "UOI-Config",
+        "func": "// Example: Configuration Digital Output / Input\n// Catan Index 13 bis 14\n\n//    UOI_TYPE_DONT_CHANGE = 0;\n//    UOI_TYPE_DEFAULT = 1;\n//    UOI_TYPE_DO = 2;\n//    UOI_TYPE_DI = 3;\n//    UOI_TYPE_COUNTER = 4;\n//    UOI_TYPE_AO_VOLTAGE = 5;\n\n// -----------------------------------------\n// Configure Type with number from above\n\nconst configurations = [\n    { id: 13, enabled: 3, name: \"13\", configured: 3,  type: 5 },  \n    { id: 14, enabled: 3, name: \"14\", configured: 3, type: 5 }\n];\n\n// -----------------------------------------\n\nconst messages = configurations.map(cfg => {\n    return {\n        url: `coap://169.254.253.1/uoi/${cfg.id}/cfg`,\n        protobufType: \"Catan.Uoi.UoiCfgReq\",\n        payload: {\n            \"type\": cfg.type,\n            \"enabled\": cfg.enabled,\n            \"name\": {\n                \"val\": cfg.name,\n                \"setting\": 2\n            },\n            \"configured\": cfg.configured\n        }\n    };\n});\n\nreturn [ messages ];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 460,
+        "wires": [
+            [
+                "86ffd9d4c7f09058"
+            ]
+        ]
+    },
+    {
+        "id": "e2a694cb74f612ea",
+        "type": "comment",
+        "z": "933937f791348941",
+        "name": "Configure Universal Input (UI)",
+        "info": "",
+        "x": 160,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "92070bfaa1295237",
+        "type": "comment",
+        "z": "933937f791348941",
+        "name": "Configure Digital Output / Input (DOI)",
+        "info": "",
+        "x": 180,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3841ff50d3327f4a",
+        "type": "comment",
+        "z": "933937f791348941",
+        "name": "Configure Universal Output / Input (UOI)",
+        "info": "",
+        "x": 190,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "8e26a2a01303b7d6",
+        "type": "delay",
+        "z": "933937f791348941",
+        "name": "Limit",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "10",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 430,
+        "y": 100,
+        "wires": [
+            [
+                "34a919e8aa2ad259"
+            ]
+        ]
+    },
+    {
+        "id": "203ebf12e8730e92",
+        "type": "delay",
+        "z": "933937f791348941",
+        "name": "Limit",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "10",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 450,
+        "y": 280,
+        "wires": [
+            [
+                "b0463b80cb7f09fa"
+            ]
+        ]
+    },
+    {
+        "id": "86ffd9d4c7f09058",
+        "type": "delay",
+        "z": "933937f791348941",
+        "name": "Limit",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "10",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 450,
+        "y": 460,
+        "wires": [
+            [
+                "bf962b5563de2ed4"
+            ]
+        ]
+    },
+    {
+        "id": "63200e7517edbc58",
+        "type": "pb_decode",
+        "z": "933937f791348941",
+        "name": "UICfgResp",
+        "protofile": "083a74d702218435",
+        "protoType": "UiCfgResp",
+        "splitOutput": false,
+        "outputs": 1,
+        "messageDelimited": false,
+        "streamInput": false,
+        "streamTimeout": 100,
+        "decodeEnums": "String",
+        "decodeLongs": "String",
+        "decodeBytes": "String",
+        "decodeDefaults": false,
+        "decodeArrays": false,
+        "decodeObjects": false,
+        "decodeOneofs": false,
+        "decodeJson": false,
+        "fieldNames": [],
+        "x": 850,
+        "y": 120,
+        "wires": [
+            [
+                "d77b5d4ac6922599"
+            ]
+        ]
+    },
+    {
+        "id": "9a4519df91cbdf47",
+        "type": "pb_decode",
+        "z": "933937f791348941",
+        "name": "UoiCfgResp",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiCfgResp",
+        "splitOutput": false,
+        "outputs": 1,
+        "messageDelimited": false,
+        "streamInput": false,
+        "streamTimeout": 100,
+        "decodeEnums": "String",
+        "decodeLongs": "String",
+        "decodeBytes": "String",
+        "decodeDefaults": false,
+        "decodeArrays": false,
+        "decodeObjects": false,
+        "decodeOneofs": false,
+        "decodeJson": false,
+        "fieldNames": [],
+        "x": 830,
+        "y": 300,
+        "wires": [
+            [
+                "d77b5d4ac6922599"
+            ]
+        ]
+    },
+    {
+        "id": "c0b19a75c54c43db",
+        "type": "pb_decode",
+        "z": "933937f791348941",
+        "name": "UoiCfgResp",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiCfgResp",
+        "splitOutput": false,
+        "outputs": 1,
+        "messageDelimited": false,
+        "streamInput": false,
+        "streamTimeout": 100,
+        "decodeEnums": "String",
+        "decodeLongs": "String",
+        "decodeBytes": "String",
+        "decodeDefaults": false,
+        "decodeArrays": false,
+        "decodeObjects": false,
+        "decodeOneofs": false,
+        "decodeJson": false,
+        "fieldNames": [],
+        "x": 830,
+        "y": 480,
+        "wires": [
+            [
+                "d77b5d4ac6922599"
+            ]
+        ]
+    },
+    {
+        "id": "34a919e8aa2ad259",
+        "type": "pb_encode",
+        "z": "933937f791348941",
+        "name": "UICfgReq",
+        "protofile": "083a74d702218435",
+        "protoType": "UiCfgReq",
+        "messageDelimited": false,
+        "flexibleInput": false,
+        "x": 620,
+        "y": 100,
+        "wires": [
+            [
+                "12ca8eb1c154e42f"
+            ]
+        ]
+    },
+    {
+        "id": "b0463b80cb7f09fa",
+        "type": "pb_encode",
+        "z": "933937f791348941",
+        "name": "UoiCfgReq",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiCfgReq",
+        "messageDelimited": false,
+        "flexibleInput": false,
+        "x": 610,
+        "y": 280,
+        "wires": [
+            [
+                "79b667e89b575f19"
+            ]
+        ]
+    },
+    {
+        "id": "bf962b5563de2ed4",
+        "type": "pb_encode",
+        "z": "933937f791348941",
+        "name": "UoiCfgReq",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiCfgReq",
+        "messageDelimited": false,
+        "flexibleInput": false,
+        "x": 610,
+        "y": 460,
+        "wires": [
+            [
+                "52a69372e03afbd9"
+            ]
+        ]
+    },
+    {
+        "id": "12ca8eb1c154e42f",
+        "type": "coap request",
+        "z": "933937f791348941",
+        "method": "PATCH",
+        "confirmable": true,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "Coap",
+        "x": 810,
+        "y": 60,
+        "wires": [
+            [
+                "63200e7517edbc58"
+            ]
+        ]
+    },
+    {
+        "id": "79b667e89b575f19",
+        "type": "coap request",
+        "z": "933937f791348941",
+        "method": "PATCH",
+        "confirmable": true,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "Coap",
+        "x": 790,
+        "y": 240,
+        "wires": [
+            [
+                "9a4519df91cbdf47"
+            ]
+        ]
+    },
+    {
+        "id": "52a69372e03afbd9",
+        "type": "coap request",
+        "z": "933937f791348941",
+        "method": "PATCH",
+        "confirmable": true,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "Coap",
+        "x": 790,
+        "y": 420,
+        "wires": [
+            [
+                "c0b19a75c54c43db"
+            ]
+        ]
+    },
+    {
+        "id": "4cd0203765dddef9",
+        "type": "comment",
+        "z": "933937f791348941",
+        "name": "Keep alive ",
+        "info": "",
+        "x": 100,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "8dd897cfebc69886",
+        "type": "inject",
+        "z": "933937f791348941",
+        "name": "",
+        "props": [],
+        "repeat": "30",
+        "crontab": "",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 600,
+        "wires": [
+            [
+                "24d8aa95d47cf403"
+            ]
+        ]
+    },
+    {
+        "id": "24d8aa95d47cf403",
+        "type": "function",
+        "z": "933937f791348941",
+        "name": "Keep alive",
+        "func": "// Konfiguration für die Statusabfrage (sys/status oder sys/cmd)\nmsg.url = \"coap://169.254.253.1/sys\"; \n\nmsg.payload = {\n    // 1. MsgType auf TYPE_REQ_READ_STATUS (Wert: 3) setzen\n    \"msgType\": 3, \n    \n    // 2. Das korrekte Oneof-Feld laut Definition belegen (leeres Objekt)\n    \"reqRespEmpty\": {} \n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 270,
+        "y": 600,
+        "wires": [
+            [
+                "dec2f064186de448"
+            ]
+        ]
+    },
+    {
+        "id": "dec2f064186de448",
+        "type": "delay",
+        "z": "933937f791348941",
+        "name": "Limit",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "10",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 450,
+        "y": 600,
+        "wires": [
+            [
+                "bc6c50ef26076b58"
+            ]
+        ]
+    },
+    {
+        "id": "bc6c50ef26076b58",
+        "type": "pb_encode",
+        "z": "933937f791348941",
+        "name": "REQ_READ_STATUS",
+        "protofile": "083a74d702218435",
+        "protoType": "SysMessage",
+        "messageDelimited": false,
+        "flexibleInput": false,
+        "x": 640,
+        "y": 600,
+        "wires": [
+            [
+                "98a76cfdc0524045"
+            ]
+        ]
+    },
+    {
+        "id": "98a76cfdc0524045",
+        "type": "coap request",
+        "z": "933937f791348941",
+        "method": "PATCH",
+        "confirmable": true,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "Coap",
+        "x": 790,
+        "y": 560,
+        "wires": [
+            [
+                "c42afe973c4b6b09"
+            ]
+        ]
+    },
+    {
+        "id": "c42afe973c4b6b09",
+        "type": "pb_decode",
+        "z": "933937f791348941",
+        "name": "Status",
+        "protofile": "083a74d702218435",
+        "protoType": "SysMessage",
+        "splitOutput": false,
+        "outputs": 1,
+        "messageDelimited": false,
+        "streamInput": false,
+        "streamTimeout": 100,
+        "decodeEnums": "String",
+        "decodeLongs": "String",
+        "decodeBytes": "String",
+        "decodeDefaults": false,
+        "decodeArrays": false,
+        "decodeObjects": false,
+        "decodeOneofs": false,
+        "decodeJson": false,
+        "fieldNames": [],
+        "x": 850,
+        "y": 620,
+        "wires": [
+            [
+                "0851ecfd975c9aa4"
+            ]
+        ]
+    },
+    {
+        "id": "0851ecfd975c9aa4",
+        "type": "debug",
+        "z": "933937f791348941",
+        "name": "debug 7",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1040,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "65fa42aa43f5f653",
+        "type": "inject",
+        "z": "fd69e47b46404d90",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 150,
+        "y": 100,
+        "wires": [
+            [
+                "94692ef6083abcdd",
+                "a37510c397d8dec8",
+                "739d449b89c98451",
+                "30b878cb8d3adaa3",
+                "e05d8151d19d99e8",
+                "7cc2d8b5e74917cc",
+                "5f1010edb2df8764",
+                "dfee72813d86b7fe"
+            ]
+        ]
+    },
+    {
+        "id": "70138df0aeab163c",
+        "type": "debug",
+        "z": "fd69e47b46404d90",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "15b5db7163a5c013",
+        "type": "inject",
+        "z": "fd69e47b46404d90",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 460,
+        "wires": [
+            [
+                "76ad8d8614a3587a",
+                "8e6263c13b994e7c",
+                "ef324d37873e3629",
+                "033ee3f18b31e374"
+            ]
+        ]
+    },
+    {
+        "id": "fde578d7f55fd25a",
+        "type": "debug",
+        "z": "fd69e47b46404d90",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "6cc00c4f05cf26f3",
+        "type": "inject",
+        "z": "fd69e47b46404d90",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 170,
+        "y": 640,
+        "wires": [
+            [
+                "a211484ae428d397",
+                "4c79aedbed5e6fc0"
+            ]
+        ]
+    },
+    {
+        "id": "b720e417985e76a0",
+        "type": "debug",
+        "z": "fd69e47b46404d90",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 920,
+        "y": 640,
+        "wires": []
+    },
+    {
+        "id": "6990bf276ec092c2",
+        "type": "comment",
+        "z": "fd69e47b46404d90",
+        "name": "Universal Input (UI)",
+        "info": "",
+        "x": 110,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "54b85786a77c89cc",
+        "type": "comment",
+        "z": "fd69e47b46404d90",
+        "name": "Digital Ouput / Digital Input (DOI)",
+        "info": "",
+        "x": 150,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "189f3a91e31aaeee",
+        "type": "comment",
+        "z": "fd69e47b46404d90",
+        "name": "Universal Output / Input (UOI)",
+        "info": "",
+        "x": 140,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "94692ef6083abcdd",
+        "type": "delay",
+        "z": "fd69e47b46404d90",
+        "name": "0ms",
+        "pauseType": "delay",
+        "timeout": "0",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 330,
+        "y": 100,
+        "wires": [
+            [
+                "435979bc268dcbd6"
+            ]
+        ]
+    },
+    {
+        "id": "a37510c397d8dec8",
+        "type": "delay",
+        "z": "fd69e47b46404d90",
+        "name": "100ms",
+        "pauseType": "delay",
+        "timeout": "100",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 330,
+        "y": 140,
+        "wires": [
+            [
+                "791dcc1239888415"
+            ]
+        ]
+    },
+    {
+        "id": "739d449b89c98451",
+        "type": "delay",
+        "z": "fd69e47b46404d90",
+        "name": "200ms",
+        "pauseType": "delay",
+        "timeout": "200",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 330,
+        "y": 180,
+        "wires": [
+            [
+                "986b075f7a5d83f9"
+            ]
+        ]
+    },
+    {
+        "id": "30b878cb8d3adaa3",
+        "type": "delay",
+        "z": "fd69e47b46404d90",
+        "name": "300ms",
+        "pauseType": "delay",
+        "timeout": "300",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 330,
+        "y": 220,
+        "wires": [
+            [
+                "58b7fa33b89b71dc"
+            ]
+        ]
+    },
+    {
+        "id": "e05d8151d19d99e8",
+        "type": "delay",
+        "z": "fd69e47b46404d90",
+        "name": "700ms",
+        "pauseType": "delay",
+        "timeout": "700",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 330,
+        "y": 260,
+        "wires": [
+            [
+                "9dbf57050c353bb0"
+            ]
+        ]
+    },
+    {
+        "id": "7cc2d8b5e74917cc",
+        "type": "delay",
+        "z": "fd69e47b46404d90",
+        "name": "800ms",
+        "pauseType": "delay",
+        "timeout": "800",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 330,
+        "y": 300,
+        "wires": [
+            [
+                "e2d4de30c3e3053d"
+            ]
+        ]
+    },
+    {
+        "id": "5f1010edb2df8764",
+        "type": "delay",
+        "z": "fd69e47b46404d90",
+        "name": "900ms",
+        "pauseType": "delay",
+        "timeout": "900",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 330,
+        "y": 340,
+        "wires": [
+            [
+                "026c0235c0887243"
+            ]
+        ]
+    },
+    {
+        "id": "dfee72813d86b7fe",
+        "type": "delay",
+        "z": "fd69e47b46404d90",
+        "name": "1000ms",
+        "pauseType": "delay",
+        "timeout": "1000",
+        "timeoutUnits": "milliseconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 320,
+        "y": 380,
+        "wires": [
+            [
+                "1b4abc8d741b9bde"
+            ]
+        ]
+    },
+    {
+        "id": "3c1b7d14085a7aa5",
+        "type": "pb_decode",
+        "z": "fd69e47b46404d90",
+        "name": "UIResp",
+        "protofile": "083a74d702218435",
+        "protoType": "UiResp",
+        "splitOutput": false,
+        "outputs": 1,
+        "messageDelimited": false,
+        "streamInput": false,
+        "streamTimeout": 100,
+        "decodeEnums": "String",
+        "decodeLongs": "String",
+        "decodeBytes": "String",
+        "decodeDefaults": true,
+        "decodeArrays": false,
+        "decodeObjects": false,
+        "decodeOneofs": false,
+        "decodeJson": false,
+        "fieldNames": [],
+        "x": 760,
+        "y": 100,
+        "wires": [
+            [
+                "70138df0aeab163c"
+            ]
+        ]
+    },
+    {
+        "id": "5941eab4a44315e5",
+        "type": "pb_decode",
+        "z": "fd69e47b46404d90",
+        "name": "UOIResp",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiResp",
+        "splitOutput": false,
+        "outputs": 1,
+        "messageDelimited": false,
+        "streamInput": false,
+        "streamTimeout": 100,
+        "decodeEnums": "String",
+        "decodeLongs": "String",
+        "decodeBytes": "String",
+        "decodeDefaults": true,
+        "decodeArrays": false,
+        "decodeObjects": false,
+        "decodeOneofs": false,
+        "decodeJson": false,
+        "fieldNames": [],
+        "x": 760,
+        "y": 460,
+        "wires": [
+            [
+                "fde578d7f55fd25a"
+            ]
+        ]
+    },
+    {
+        "id": "641dc6682dd83df2",
+        "type": "pb_decode",
+        "z": "fd69e47b46404d90",
+        "name": "UoiResp",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiResp",
+        "splitOutput": false,
+        "outputs": 1,
+        "messageDelimited": false,
+        "streamInput": false,
+        "streamTimeout": 100,
+        "decodeEnums": "String",
+        "decodeLongs": "String",
+        "decodeBytes": "String",
+        "decodeDefaults": true,
+        "decodeArrays": false,
+        "decodeObjects": false,
+        "decodeOneofs": false,
+        "decodeJson": false,
+        "fieldNames": [],
+        "x": 760,
+        "y": 640,
+        "wires": [
+            [
+                "b720e417985e76a0"
+            ]
+        ]
+    },
+    {
+        "id": "435979bc268dcbd6",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/ui/1",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UI - 1",
+        "x": 530,
+        "y": 100,
+        "wires": [
+            [
+                "3c1b7d14085a7aa5"
+            ]
+        ]
+    },
+    {
+        "id": "76ad8d8614a3587a",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/doi/9",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - DOI - 9",
+        "x": 520,
+        "y": 460,
+        "wires": [
+            [
+                "5941eab4a44315e5"
+            ]
+        ]
+    },
+    {
+        "id": "8e6263c13b994e7c",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/doi/10",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - DOI - 10",
+        "x": 520,
+        "y": 500,
+        "wires": [
+            [
+                "5941eab4a44315e5"
+            ]
+        ]
+    },
+    {
+        "id": "ef324d37873e3629",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/doi/11",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - DOI - 11",
+        "x": 520,
+        "y": 540,
+        "wires": [
+            [
+                "5941eab4a44315e5"
+            ]
+        ]
+    },
+    {
+        "id": "033ee3f18b31e374",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/doi/12",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - DOI - 12",
+        "x": 520,
+        "y": 580,
+        "wires": [
+            [
+                "5941eab4a44315e5"
+            ]
+        ]
+    },
+    {
+        "id": "791dcc1239888415",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/ui/2",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UI - 2",
+        "x": 530,
+        "y": 140,
+        "wires": [
+            [
+                "3c1b7d14085a7aa5"
+            ]
+        ]
+    },
+    {
+        "id": "986b075f7a5d83f9",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/ui/3",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UI - 3",
+        "x": 530,
+        "y": 180,
+        "wires": [
+            [
+                "3c1b7d14085a7aa5"
+            ]
+        ]
+    },
+    {
+        "id": "58b7fa33b89b71dc",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/ui/4",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UI - 4",
+        "x": 530,
+        "y": 220,
+        "wires": [
+            [
+                "3c1b7d14085a7aa5"
+            ]
+        ]
+    },
+    {
+        "id": "9dbf57050c353bb0",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/ui/5",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UI - 5",
+        "x": 530,
+        "y": 260,
+        "wires": [
+            [
+                "3c1b7d14085a7aa5"
+            ]
+        ]
+    },
+    {
+        "id": "e2d4de30c3e3053d",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/ui/6",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UI - 6",
+        "x": 530,
+        "y": 300,
+        "wires": [
+            [
+                "3c1b7d14085a7aa5"
+            ]
+        ]
+    },
+    {
+        "id": "026c0235c0887243",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": true,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/ui/7",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UI - 7",
+        "x": 530,
+        "y": 340,
+        "wires": [
+            [
+                "3c1b7d14085a7aa5"
+            ]
+        ]
+    },
+    {
+        "id": "1b4abc8d741b9bde",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": true,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/ui/8",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UI - 8",
+        "x": 530,
+        "y": 380,
+        "wires": [
+            [
+                "3c1b7d14085a7aa5"
+            ]
+        ]
+    },
+    {
+        "id": "a211484ae428d397",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/uoi/13",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UOI - 13",
+        "x": 520,
+        "y": 640,
+        "wires": [
+            [
+                "641dc6682dd83df2"
+            ]
+        ]
+    },
+    {
+        "id": "4c79aedbed5e6fc0",
+        "type": "coap request",
+        "z": "fd69e47b46404d90",
+        "method": "GET",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "coap://169.254.253.1/uoi/14",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "CoAP - UOI - 14",
+        "x": 520,
+        "y": 680,
+        "wires": [
+            [
+                "641dc6682dd83df2"
+            ]
+        ]
+    },
+    {
+        "id": "0d41fb263fea86f6",
+        "type": "comment",
+        "z": "11fa33973bfd05e7",
+        "name": "Outputs can only be written if the I/Os are configured as outputs.",
+        "info": "",
+        "x": 270,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "5928dd6740c08ff7",
+        "type": "inject",
+        "z": "11fa33973bfd05e7",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 180,
+        "wires": [
+            [
+                "2b1170827f6910d5"
+            ]
+        ]
+    },
+    {
+        "id": "d7d8f21f55767368",
+        "type": "debug",
+        "z": "11fa33973bfd05e7",
+        "name": "debug 3",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "8a42dc5d7d904458",
+        "type": "inject",
+        "z": "11fa33973bfd05e7",
+        "name": "",
+        "props": [],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "x": 110,
+        "y": 380,
+        "wires": [
+            [
+                "21025805e444a72e"
+            ]
+        ]
+    },
+    {
+        "id": "0e3aaedbf3610e2f",
+        "type": "debug",
+        "z": "11fa33973bfd05e7",
+        "name": "debug 4",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "2b1170827f6910d5",
+        "type": "function",
+        "z": "11fa33973bfd05e7",
+        "name": "DOI - write",
+        "func": "// Catan IOs DOI 9 to 12, only possible when configured as digital output\n// Write value for digital out, recommend value: 2 or 3\n//    BOOLEAN_SET_DONT_CHANGE = 0;\n//    BOOLEAN_SET_DEFAULT = 1;\n//    BOOLEAN_SET_FALSE = 2;\n//    BOOLEAN_SET_TRUE = 3;\n\n//---------------------------------------------\n// Set value:\n\nconst configurations = [\n    { id: 9, digitalSetVal: 3 },  \n    { id: 10, digitalSetVal: 3 },\n    { id: 11, digitalSetVal: 3 }, \n    { id: 12, digitalSetVal: 3 }\n];\n\n//---------------------------------------------\n\nconst messages = configurations.map(cfg => {\n    return {\n        url: `coap://169.254.253.1/doi/${cfg.id}`,\n        protobufType: \"Catan.Doi.UoiReq\",\n        payload: {\n            \"digitalSetVal\": cfg.digitalSetVal\n        }\n    };\n});\n\nreturn [ messages ];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 240,
+        "wires": [
+            [
+                "f8fefc84b184bc49"
+            ]
+        ]
+    },
+    {
+        "id": "21025805e444a72e",
+        "type": "function",
+        "z": "11fa33973bfd05e7",
+        "name": "UOI - write",
+        "func": "// Catan IOs UOI 13 and 14, only possible when configured as digital or analog output\n// Write value for digital out, recommend value: 2 or 3\n//    BOOLEAN_SET_DONT_CHANGE = 0;\n//    BOOLEAN_SET_DEFAULT = 1;\n//    BOOLEAN_SET_FALSE = 2;\n//    BOOLEAN_SET_TRUE = 3;\n\n// Analog range 0..10 (in volt, Float)\n\n// Define configurations for the various I/Os\n// For each ID choose: \n// activeType: \"analog\"  (or)\n// activeType: \"digital\"\n//---------------------------------------------\n// Set value:\n\nconst configurations = [\n    { id: 13, activeType: \"analog\", analogValue: 8, digitalValue: 2 }, \n    { id: 14, activeType: \"analog\", analogValue: 10, digitalValue: 2 }\n];\n\n//---------------------------------------------\n\nconst messages = configurations.map(cfg => {\n    let payloadStructure = {};\n    if (cfg.activeType === \"analog\") {\n        payloadStructure = {\n            \"analogSetVal\": {\n                \"val\": cfg.analogValue,\n                \"setting\": 2 \n            },\n            \"digitalSetVal\": 2 \n        };\n    } \n    else if (cfg.activeType === \"digital\") {\n        payloadStructure = {\n            \"digitalSetVal\": cfg.digitalValue, \n            \"analogSetVal\": {\n                \"val\": 0,\n                \"setting\": 2 \n            }\n        };\n    }\n\n    return {\n        url: `coap://169.254.253.1/uoi/${cfg.id}/state`,\n        protobufType: \"Catan.Uoi.UoiReq\",\n        payload: payloadStructure\n    };\n});\n\nreturn [ messages ];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 210,
+        "y": 440,
+        "wires": [
+            [
+                "a889f7b948ec0b7e"
+            ]
+        ]
+    },
+    {
+        "id": "f225d690f93521f3",
+        "type": "comment",
+        "z": "11fa33973bfd05e7",
+        "name": "Digital Out (DOI)",
+        "info": "",
+        "x": 120,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "f971eca1993fe4df",
+        "type": "comment",
+        "z": "11fa33973bfd05e7",
+        "name": "Analog Out / Digital Out (UOI)",
+        "info": "",
+        "x": 160,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "ed3842367b4c106d",
+        "type": "delay",
+        "z": "11fa33973bfd05e7",
+        "name": "Limit",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "10",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 390,
+        "y": 240,
+        "wires": [
+            [
+                "f0f1c3623fb970df"
+            ]
+        ]
+    },
+    {
+        "id": "19d1e5c1dcfb84d1",
+        "type": "delay",
+        "z": "11fa33973bfd05e7",
+        "name": "Limit",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "10",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": true,
+        "outputs": 1,
+        "x": 390,
+        "y": 440,
+        "wires": [
+            [
+                "9de246e433b47591"
+            ]
+        ]
+    },
+    {
+        "id": "99e455cdf0b5c6f9",
+        "type": "pb_decode",
+        "z": "11fa33973bfd05e7",
+        "name": "UoiResp",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiResp",
+        "splitOutput": false,
+        "outputs": 1,
+        "messageDelimited": false,
+        "streamInput": false,
+        "streamTimeout": 100,
+        "decodeEnums": "String",
+        "decodeLongs": "String",
+        "decodeBytes": "String",
+        "decodeDefaults": true,
+        "decodeArrays": false,
+        "decodeObjects": false,
+        "decodeOneofs": false,
+        "decodeJson": false,
+        "fieldNames": [],
+        "x": 560,
+        "y": 240,
+        "wires": [
+            [
+                "d7d8f21f55767368"
+            ]
+        ]
+    },
+    {
+        "id": "bbdd437959290320",
+        "type": "pb_decode",
+        "z": "11fa33973bfd05e7",
+        "name": "UoiResp",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiResp",
+        "splitOutput": false,
+        "outputs": 1,
+        "messageDelimited": false,
+        "streamInput": false,
+        "streamTimeout": 100,
+        "decodeEnums": "String",
+        "decodeLongs": "String",
+        "decodeBytes": "String",
+        "decodeDefaults": true,
+        "decodeArrays": false,
+        "decodeObjects": false,
+        "decodeOneofs": false,
+        "decodeJson": false,
+        "fieldNames": [],
+        "x": 560,
+        "y": 440,
+        "wires": [
+            [
+                "0e3aaedbf3610e2f"
+            ]
+        ]
+    },
+    {
+        "id": "f8fefc84b184bc49",
+        "type": "pb_encode",
+        "z": "11fa33973bfd05e7",
+        "name": "UoiReq",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiReq",
+        "messageDelimited": false,
+        "flexibleInput": false,
+        "x": 300,
+        "y": 180,
+        "wires": [
+            [
+                "ed3842367b4c106d"
+            ]
+        ]
+    },
+    {
+        "id": "a889f7b948ec0b7e",
+        "type": "pb_encode",
+        "z": "11fa33973bfd05e7",
+        "name": "UoiReq",
+        "protofile": "083a74d702218435",
+        "protoType": "UoiReq",
+        "messageDelimited": false,
+        "flexibleInput": false,
+        "x": 300,
+        "y": 380,
+        "wires": [
+            [
+                "19d1e5c1dcfb84d1"
+            ]
+        ]
+    },
+    {
+        "id": "f0f1c3623fb970df",
+        "type": "coap request",
+        "z": "11fa33973bfd05e7",
+        "method": "PATCH",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "DOI",
+        "x": 470,
+        "y": 180,
+        "wires": [
+            [
+                "99e455cdf0b5c6f9"
+            ]
+        ]
+    },
+    {
+        "id": "9de246e433b47591",
+        "type": "coap request",
+        "z": "11fa33973bfd05e7",
+        "method": "PATCH",
+        "confirmable": false,
+        "observe": false,
+        "multicast": false,
+        "multicastTimeout": 20000,
+        "url": "",
+        "content-format": "text/plain",
+        "raw-buffer": true,
+        "name": "UOI",
+        "x": 470,
+        "y": 380,
+        "wires": [
+            [
+                "bbdd437959290320"
+            ]
+        ]
+    },
+    {
+        "id": "6af8699174bf6eeb",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "@bveenema/node-red-protobuf": "2.2.1",
+            "node-red-contrib-coap": "0.8.0"
+        }
+    }
+]

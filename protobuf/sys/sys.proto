@@ -184,7 +184,7 @@ message Ipv6 {
   bool is_dhcp = 4;                                                                        // true: DHCP assigned address, false: static address
 }
 
-message Adapter {  
+message Adapter {
   AdapterId id = 1;              // Adapter identifier
   bool enabled = 2;              // true: Adapter is enabled
   bool can_disable = 3;          // true: "enable" can be written (what is not the case for en0)
@@ -195,7 +195,7 @@ message Adapter {
   Ipv6 ipv6 = 8;                 // ipv6 configuration data
 }
 
-message SetAdapter {  
+message SetAdapter {
   AdapterId id = 1;                    // Adapter identifier
   BooleanSetting enable = 2;           // manipulate Adapter->enabled
   BooleanSetting ipv6_enable = 3;      // manipulate Adapter->ipv6_enabled
@@ -256,7 +256,7 @@ message SysMessage {
         // string uuid_type = 9 [(nanopb).max_length = 36]; do not reuse!
         // string uuid_plc_next = 10 [(nanopb).max_length = 36]; do not reuse!
         // string g_tin = 11 [(nanopb).max_length = 14]; do not reuse!
-        string dali_serial_no = 12 [(nanopb).max_length = 8];
+        // string dali_serial_no = 12 [(nanopb).max_length = 8]; do not reuse!
 
         string model_revision = 13 [(nanopb).max_length = 2];
         uint32 hardware_revision = 14;

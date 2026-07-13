@@ -1,0 +1,13 @@
+services:
+  netbird:
+    image: docker.io/netbirdio/netbird:latest
+    container_name: netbird
+    restart: unless-stopped
+    volumes:
+      - ./netbird:/etc/netbird
+    network_mode: host
+    environment:
+      - NB_SETUP_KEY=<your-setup-key>
+    # Permissions for the admin user
+    userns_mode: keep-id
+    user: 1002:1002

@@ -57,7 +57,7 @@ message UoiCfgReq{
     FloatSetting lower_fault_level = 20; // AO
     FloatSetting upper_fault_level = 21; // AO
 
-    // BooleanSetting debounced = 22; do not reuse!
+    BooleanSetting debounced = 22; // DI
 
     String16Setting false_text = 23; // DI / DO
     String16Setting true_text = 24; // DI / DO
@@ -102,7 +102,7 @@ message UoiCfgResp{
     float lower_fault_level = 20; // AO
     float upper_fault_level = 21; // AO
 
-    // bool debounced = 22; do not reuse!
+    bool debounced = 22; // DI
 
     string false_text = 23 [(nanopb).max_length = 16]; // DI / DO
     string true_text = 24 [(nanopb).max_length = 16]; // DI / DO

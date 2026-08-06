@@ -7,13 +7,15 @@ services:
     ports:
       - "1880:1880"
     volumes:
-      - ./nodered:/data
-# USB serial devices     
+      - ~/nodered:/data
+# USB serial
       - /dev/usb-devices:/dev/usb-devices
-# RS485(1) and RS485(2)      
     devices:
+# RS485(2)
       - /dev/ttymxc2:/dev/ttymxc2
+# RS485(1)
       - /dev/ttymxc3:/dev/ttymxc3
-# Permissions for the admin user      
+
+# Permissions for the admin user
     userns_mode: keep-id
     user: 1002:1002

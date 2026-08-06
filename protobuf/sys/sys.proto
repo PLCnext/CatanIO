@@ -3,14 +3,6 @@ syntax = "proto3";
 import "shared.proto";
 import "nanopb.proto";
 
-// GO
-option go_package = "git-ima.europe.phoenixcontact.com/abacusgo/linkbusgo";
-
-// JAVA settings
-option java_multiple_files = false;
-option java_package = "com.phoenixcontact.emalyticscatanio.message";
-option java_outer_classname = "EmalyticsCatanIoSys";
-
 
 /* sys/cfg ********************************************************************/
 // write config request
@@ -56,7 +48,7 @@ enum Language {
     IT_IT = 4;
 }
 
-/* sys/discovery **************************************************************/
+/* sys/discover **************************************************************/
 // on CTRL
 message ReqDiscover {
     enum DiscoverOption {

@@ -29,10 +29,10 @@ Description: Input/output module \
 Article number: 1818583 \
 Product website: http://www.phoenixcontact.net/product/1818583
 
-Module: CATAN DALI4 DOI8  \
+Module: CATAN DALI MM4 DOI8  \
 Description: Dali module \
-Article number: Comming soon, under development \
-Product website: 
+Article number: 1371363 \
+Product website: http://www.phoenixcontact.net/product/1371363
 
 ## Addons
 
@@ -56,12 +56,11 @@ examples_container/
 protobuf/
 * `com/` RS485 settings and Protobuf for deactivating communication functions
 * `dali/`Protobuf files and README for DALI-specific devices
-* `doi/` Digital Input and Digital Output
 * `dor/` Relay outputs
 * `shared/` Shared Protobuf definitions for data types
 * `sys/` System properties
 * `ui/` Universal Input
-* `uoi/`Universal Output and Digital Input
+* `uoi/`Universal Output and Digital Input, include Doi(digital Output and Input) and Uv(virtual display datapoint)
 
 ## General API Information
 
@@ -103,7 +102,7 @@ They describe functional types, states, and properties – not individual hardwa
   Applies exclusively to the relay module (DOR)
   Contains only relay-specific functions and states
 
-- ui,uoi,doi.proto
+- ui/uoi/doi.proto
   Applies to all devices and modules that provide the corresponding channels.
   Contains IO specific functions and states
 

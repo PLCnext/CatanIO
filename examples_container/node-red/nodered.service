@@ -1,4 +1,3 @@
-
 [Unit]
 Description=Node-RED rootless Podman container
 After=network-online.target
@@ -7,8 +6,7 @@ Wants=network-online.target
 [Service]
 Restart=always
 RestartSec=10
-
-# Container vor dem Start entfernen, falls er noch existiert
+ExecStartPre=/usr/bin/mkdir -p ~/nodered
 ExecStartPre=-/usr/bin/podman rm -f nodered
 
 ExecStart=/usr/bin/podman run \
@@ -16,11 +14,9 @@ ExecStart=/usr/bin/podman run \
   --rm \
   --userns=keep-id \
   --user 1002:1002 \
-  --group-add keep-groups \
   --env TZ=Europe/Amsterdam \
   --publish 1880:1880 \
-  --volume /home/admin/nodered:/data \
-  --volume /var/run/plcnext/grpc.sock:/var/run/plcnext/grpc.sock \
+  --volume ~/nodered:/data \
   --device /dev/ttymxc2:/dev/ttymxc2 \
   --device /dev/ttymxc3:/dev/ttymxc3 \
   docker.io/nodered/node-red:latest

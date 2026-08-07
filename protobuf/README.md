@@ -237,7 +237,7 @@ flowchart TD
     UI["ui.proto<br/>Universal Input"]
     UOI["uoi.proto<br/>UOI, DOI, and UV"]
     DOR["dor.proto<br/>Relay Output"]
-    DALI["DALI schema<br/>DALI API"]
+    DALI["dali.proto<br/>DALI API"]
 
     NP --> SH
 
@@ -298,8 +298,6 @@ protoc \
   protobuf/sys/sys.proto \
   protobuf/dali/dali.proto
 ```
-
-The exact DALI schema filename must match the active file in the checked-out repository revision.
 
 DOI and UV are not added as separate `.proto` files because they use the UOI message definitions.
 

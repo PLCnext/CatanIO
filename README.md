@@ -60,7 +60,7 @@ protobuf/
 * `shared/` Shared Protobuf definitions for data types
 * `sys/` System properties
 * `ui/` Universal Input
-* `uoi/`Universal Output and Digital Input, include Doi(digital Output and Input) and Uv(virtual display datapoint)
+* `uoi_doi_uv/`Universal Output and Digital Input, include Doi(digital Output and Input) and Uv(virtual display datapoint)
 
 ## General API Information
 

@@ -30,11 +30,11 @@ Article number: 1818583 \
 Product website: http://www.phoenixcontact.net/product/1818583
 
 Module: CATAN DALI MM4 DOI8  \
-Description: Dali module \
+Description: DALI module \
 Article number: 1371363 \
 Product website: http://www.phoenixcontact.net/product/1371363
 
-## Addons
+## Add-ons
 
 Module: CATAN CONTROL PANEL  \
 Description: Display \
@@ -60,7 +60,7 @@ protobuf/
 * `shared/` Shared Protobuf definitions for data types
 * `sys/` System properties
 * `ui/` Universal Input
-* `uoi_doi_uv/`Universal Output and Digital Input, include Doi(digital Output and Input) and Uv(virtual display datapoint)
+* `uoi_doi_uv/`Universal Output and Digital Input, includes DOI (Digital Output and Input) and Uv(virtual display datapoint)
 
 ## General API Information
 
@@ -108,10 +108,10 @@ They describe functional types, states, and properties – not individual hardwa
 
 ### Catan C1
 
-* 3 physical gigabit ethernet ports, default are LAN1+LAN2 switched
-* 2 RS485 - e.g. Modbus RTU, Bacnet MSTP, DMX ....
+* 3 physical Gigabit Ethernet ports, default are LAN1 and LAN2 switched
+* 2 RS-485 interfaces, e.g. for Modbus RTU, Bacnet MSTP, and DMX
 * 1 KNX TP, KNX IP and KNX Router 
-* 2 physical SPE T1L with 10Mbit/s for addon modules
+* 2 physical SPE T1L with 10 Mbit/s for add-on modules
 
 ### UI - Universal input
 
@@ -122,12 +122,12 @@ They describe functional types, states, and properties – not individual hardwa
 ![Catan UI](images/ui.png)
 
 
-### UOI - Univsersal output and digital input
+### UOI - Universal output and digital input
 
 * Dry contacts 
 * Counter	
-* Digital out 24 V 500 mA
-* Analog out 0…10 V
+* Digital output 24 V 500 mA
+* Analog output 0…10 V
 
 ![Catan UOI](images/uoi.png)
     
@@ -136,7 +136,7 @@ They describe functional types, states, and properties – not individual hardwa
 
 * Dry contacts
 * Counter	
-* Digital out 24 V / 500 mA
+* Digital output 24 V / 500 mA
 
 ![Catan DOI](images/doi.png)
 
@@ -146,7 +146,7 @@ They describe functional types, states, and properties – not individual hardwa
 The following display functions are available for inputs and outputs:
 
 - Allow override directly via the display
-- Display override can be reset from application
+- Display override can be reset by the application
 - Freely definable name for display purposes
 - Display of a unit (e.g. %, V, A, °C)
 

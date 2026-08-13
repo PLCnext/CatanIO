@@ -7,9 +7,10 @@ This document describes the system-level CoAP endpoints and Protocol Buffers mes
 The System API uses two communication models:
 
 1. Direct CoAP endpoints with dedicated request and response messages
-2. Generic system operations transported as `SysMessage` messages through `PATCH /sys`
+2. Generic system operations transported as `SysMessage` messages via `PATCH /sys`
 
-Operations such as device information, system status, UI calibration, neighbor discovery, firmware information, reboot, memory commands, identification, and LED control are not separate CoAP endpoints. They are selected through `SysMessage.msg_type` and transported through:
+Operations such as retrieving device information, requesting the system status, calibrating the UI, discovering neighboring devices, retrieving firmware information, rebooting, executing memory-related commands, identifying devices, and controlling LEDs are not implemented as separate CoAP endpoints.
+Instead, they are selected through `SysMessage.msg_type` and send via:
 
 ```text
 PATCH /sys

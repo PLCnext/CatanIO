@@ -6,8 +6,8 @@ These changelogs focus on functional changes and improvements for easier trackin
 Please note:
 
 - The **complete and official changelogs**, including security fixes and CVE references, are provided as part of the firmware downloads.
-- For full release notes and security-relevant information, refer to the official product page:
+- For full release notes and security-related information, refer to the official product page:
 
 👉 [Phoenix Contact Product Page – Firmware Downloads](https://www.phoenixcontact.com/product/1886438)
 
-This repository is intended as a lightweight overview of feature evolution and does not replace the official documentation.
+This repository is intended to provide a lightweight overview of feature evolution and does not replace the official documentation.

@@ -48,14 +48,14 @@ Only for CodeMeter Server
 
 * PodmanArgs=--pid host
 
-### RS485
+### RS-485
 
-For accessing to the two RS485 interfaces.
+For accessing to the two RS-485 interfaces.
 
-RS485(1):
+RS-485(1):
 * AddDevice=/dev/ttymxc3
 
-RS485(2):
+RS-485(2):
 * AddDevice=/dev/ttymxc2
 
 ### USB interface

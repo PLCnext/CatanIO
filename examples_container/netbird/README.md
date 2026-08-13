@@ -1,10 +1,10 @@
 ## NetBird Compose Setup (Rootless)
 
-This Compose file runs a NetBird client in rootless Podman mode on a Catan device.
+This Compose file runs a NetBird client using rootless Podman mode on a Catan device.
 
 ### Service Overview
 - Runs the NetBird client to connect the device securely to a private network
-- Stores persistent state in a local directory
+- Stores persistent configuration data in a local directory
 
 ### Compose File
 ```yaml
@@ -29,7 +29,7 @@ services:
    podman compose up -d
    ```
 
-2. Check logs:
+2. View the logs:
    ```bash
    podman compose logs -f
    ```
@@ -40,9 +40,9 @@ services:
    ```
 
 ### Notes
-- Rootless Podman requires proper user namespace configuration (`keep-id`)
-- The NetBird setup key must be provided via environment variable (`NB_SETUP_KEY`)
+- Rootless Podman requires the user namespace to be configured with `keep-id`
+- The NetBird setup key must be provided through the environment variable (`NB_SETUP_KEY`)
 - Persistent configuration is stored in `./netbird`
-- All mount paths must be created manually in the host filesystem — Podman does not create them automatically
+- All mount paths must be created manually in the host filesystem. Podman does not create them automatically
 - Depending on the host configuration, additional permissions or capabilities may be required for networking
 

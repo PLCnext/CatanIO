@@ -1,6 +1,6 @@
 ## Home Assistant Compose Setup
 
-This Compose file runs a Home Assistant instance with access to USB and RS485 interfaces on a Catan device.
+This Compose file runs a Home Assistant instance on a Catan C1 and provides access to its USB and RS-485 interfaces.
 
 ### Service Overview
 - Uses the official Home Assistant container image
@@ -35,20 +35,19 @@ services:
 
 ### Interfaces
 - **USB Serial**
-  - All USB serial devices are exposed via `/dev/usb-devices`
-  - Enables usage of gateways (e.g. M-Bus, wM-Bus, EnOcean)
+  - All USB serial devices are available through `/dev/usb-devices`
+  - Enables the use of gateways such as M-Bus, wM-Bus, EnOcean.
 
 - **RS485**
-  - `/dev/ttymxc3` → RS485(1)
-  - `/dev/ttymxc2` → RS485(2)
+  - `/dev/ttymxc3` → RS-485 (1)
+  - `/dev/ttymxc2` → RS-485 (2)
 
 ### Usage
 1. Start the stack:
    ```bash
    podman compose up -d
    ```
-
-2. Open Home Assistant:
+2. Open Home Assistant in a web browser:
    - http://<device-ip>:8123
 
 3. Stop the stack:

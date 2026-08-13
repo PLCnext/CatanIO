@@ -1,10 +1,10 @@
-# CatanIO: Shared API Documentation
+# CatanIO Shared API Documentation
 
 ## Overview
 
-`shared.proto` defines common enums, setting types, diagnostic states, and signal-processing structures used by the CatanIO interfaces.
+`shared.proto` defines common enums, setting types, diagnostic states, and signal-processing structures for the CatanIO interfaces.
 
-The definitions are shared by interfaces such as:
+The definitions are shared by the following interfaces:
 
 - UI
 - UOI
@@ -17,7 +17,7 @@ The definitions are shared by interfaces such as:
 The schema uses:
 
 ```text
-Serialization: Protocol Buffers, proto3
+Serialization: Protocol Buffers (proto3)
 Constraints:   nanopb options
 ```
 

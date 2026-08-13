@@ -4,7 +4,7 @@
 
 This API defines the configuration and runtime control of Universal I/O (UOI) channels and the related DOI and UV channel subsets via **CoAP**.
 
-DOI and UV channels reuse the UOI Protobuf message definitions and therefore share the same request and response structures with UOI.
+DOI and UV channels reuse the UOI Protobuf message definitions and therefore use the same request and response structures as UOI channels.
 
 Communication is handled using **Protocol Buffers** messages.
 

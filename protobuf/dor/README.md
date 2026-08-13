@@ -2,11 +2,11 @@
 
 ## Overview
 
-This API defines the configuration and runtime control of dedicated relay output (DOR) channels via **CoAP**.
+This API defines the configuration and runtime control of dedicated relay output (DOR) channels using **CoAP**.
 
 Communication is handled using **Protocol Buffers** messages.
 
-A DOR channel is a dedicated Digital Output implemented as a relay output. Unlike DOI, UOI, and UI channels, a DOR channel does not provide multiple selectable operating modes.
+A DOR channel is a dedicated digital output implemented using a relay. Unlike DOI, UOI, and UI channels, a DOR channel does not provide multiple selectable operating modes.
 
 The DOR interface therefore has:
 

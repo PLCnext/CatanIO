@@ -1,7 +1,7 @@
 # App development
 
-An application include an OCI container that is able to interact with the system through a defined set of interfaces.
-Within this environment, the container can access and make use of selected system services and resources, provided that the appropriate interfaces are enabled.
+An application includes an OCI container that is can interact with the system through a defined set of interfaces.
+Within this environment, the container access and use selected system services and resources, provided that the appropriate interfaces are enabled.
 
 The following interfaces can be utilized by an OCI container as part of the application. In order to enable their usage, the corresponding settings should be configured accordingly.
 
@@ -9,13 +9,13 @@ For more information see:
 * https://github.com/PLCnext/PLCnextAppExamples
 * https://github.com/PLCnext/App-Info-Schema
 
-## Podman Quadlet and compose recommendation for Catan C1
+## Podman, Quadlet, and Compose recommendations for Catan C1
 
 ### Permissions
 
-All interface have permissions for user `admin` and group `plcnext` for individuell use and `app_user` for PLCnext Store apps. 
+All interfaces have permissions for user `admin` and group `plcnext` for individual use and `app_user` for PLCnext Store apps. 
 
-Necessary to pass system permissions to the container.
+Necessary to pass host system permissions to the container.
 
 For compose: 
 
@@ -26,7 +26,7 @@ user: 1002:1002
 
 - The `admin` user has UID `1002`
 - The `plcnext` group has GID `1002`
-- `keep-id` ensures correct mapping between host and container users
+- `keep-id` ensures correct user mapping between the host and the container
 
 **Important for PLCnext apps:**
 - The `app_user` must use UID `1001`
@@ -44,13 +44,13 @@ Necessary to access resources on the host system. This includes the KNX interfac
 
 * Network=host
 
-Only for Codemeter Server
+Only for CodeMeter Server
 
 * PodmanArgs=--pid host
 
 ### RS485
 
-For accessing the two RS485 interfaces.
+For accessing to the two RS485 interfaces.
 
 RS485(1):
 * AddDevice=/dev/ttymxc3
@@ -64,9 +64,9 @@ USB serial devices are added to:
 
 * /dev/usb-devices
 
-## System ressources Catan C1
+## System Ressources Catan C1
 
-### Codemeter Server
+### CodeMeter Server
 
 Available
 
@@ -75,13 +75,9 @@ Available
 
 ### KNX Interface
 
-The KNX interface is accessible locally on the host. The accessibility of the KNX interface from outside can be configured through the firewall. 
+The KNX interface is accessible locally on the host system. External access to the KNX interface can be configured through the firewall. 
 
-Default reachable on switch LAN1+LAN2
+By default, reachable via LAN1 and LAN2
 
 * Port 3671 
-* Bind to any ip
-
-
-
-
+* Bind to any IP address

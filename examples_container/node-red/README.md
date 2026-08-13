@@ -5,13 +5,13 @@
 >
 > The provided Node-RED flows are intended as examples and templates for
 > evaluating and integrating Catan I/O modules. Interfaces, message formats,
-> Subflow parameters and Protobuf definitions may change.
+> subflow parameters and Protobuf definitions may change.
 >
 > Carefully test all read, write and configuration operations before using
 > the flows in a production environment.
 
 This example shows how to run Node-RED on a Catan device with access to
-Catan I/O modules, USB devices and RS485 interfaces.
+Catan I/O modules, USB devices and RS-485 interfaces.
 
 The repository also contains example flows for configuring, reading and
 writing Catan I/O channels using CoAP and Protobuf.
@@ -21,7 +21,7 @@ Two deployment options are available:
 - Podman Compose
 - systemd service (rootless Podman)
 
-## Option 1: Podman compose
+## Option 1: Podman Compose
 
 ### Service overview
 
@@ -46,9 +46,9 @@ services:
 # USB serial
       - /dev/usb-devices:/dev/usb-devices
     devices:
-# RS485(2)     
+# RS-485(2)     
       - /dev/ttymxc2:/dev/ttymxc2
-# RS485(1)      
+# RS-485(1)      
       - /dev/ttymxc3:/dev/ttymxc3
 
 # Permissions for the admin user

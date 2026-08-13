@@ -6,7 +6,7 @@ This API defines the configuration and runtime control of Universal Input (UI) c
 
 Communication is handled using **Protocol Buffers** messages.
 
-Universal Input channels support the following functional operating modes:
+Universal Input channels support the following operating modes:
 
 - Digital Input
 - Counter Input
@@ -17,14 +17,14 @@ Universal Input channels support the following functional operating modes:
 - `shared.proto`: Enums, settings, and shared helper structures
 - `ui.proto`: UI-specific messages and enums
 
-## API endpoints
+## API Endpoints
 
-The UI API uses the following CoAP endpoints and Protobuf messages:
+The UI API uses the following CoAP endpoints and Protocol Buffers messages:
 
 | Method | Endpoint | Request | Response | Description |
 |---|---|---|---|---|
 | `GET` | `/ui/<channel>/cfg` | None | `UiCfgResp` | Reads the effective UI channel configuration |
-| `PATCH` | `/ui/<channel>/cfg` | `UiCfgReq` | `UiCfgResp` | Changes the UI channel configuration |
+| `PATCH` | `/ui/<channel>/cfg` | `UiCfgReq` | `UiCfgResp` | Updates the UI channel configuration |
 | `GET` | `/ui/<channel>` | None | `UiResp` | Reads the current UI runtime values |
 | `PATCH` | `/ui/<channel>` | `UiReq` | `UiResp` | Writes initialization values and override commands |
 

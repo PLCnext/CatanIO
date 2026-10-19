@@ -28,7 +28,7 @@ Two deployment options are available:
 - Uses the official `nodered/node-red:latest` image
 - Automatically restarts unless stopped manually
 - Exposes the Node-RED web interface on port `1880`
-- Stores persistent data in `./nodered`
+- Stores persistent data in `/home/admin/nodered`
 
 ### Compose file
 
@@ -95,7 +95,7 @@ Wants=network-online.target
 [Service]
 Restart=always
 RestartSec=10
-ExecStartPre=/usr/bin/mkdir -p ~/nodered
+ExecStartPre=/usr/bin/mkdir -p /home/admin/nodered
 ExecStartPre=-/usr/bin/podman rm -f nodered
 
 ExecStart=/usr/bin/podman run \
@@ -105,7 +105,7 @@ ExecStart=/usr/bin/podman run \
   --user 1002:1002 \
   --env TZ=Europe/Amsterdam \
   --publish 1880:1880 \
-  --volume ~/nodered:/data \
+  --volume /home/admin/nodered:/data \
   --device /dev/ttymxc2:/dev/ttymxc2 \
   --device /dev/ttymxc3:/dev/ttymxc3 \
   docker.io/nodered/node-red:latest

@@ -6,7 +6,7 @@ This Compose file runs a Home Assistant instance on a Catan C1 and provides acce
 - Uses the official Home Assistant container image
 - Automatically restarts unless stopped manually
 - Exposes the Home Assistant web interface (default port `8123`)
-- Stores persistent configuration and data in `~/config`
+- Stores persistent configuration and data in `/home/admin/config`
 
 ### Compose File
 ```yaml
@@ -15,7 +15,7 @@ services:
     container_name: homeassistant
     image: "ghcr.io/home-assistant/home-assistant:stable"
     volumes:
-      - ~/config:/config
+      - /home/admin/config:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
       # USB serial devices
@@ -48,7 +48,10 @@ services:
    podman compose up -d
    ```
 2. Open Home Assistant in a web browser:
-   - http://<device-ip>:8123
+   
+   ```text
+   http://<device-ip>:8123
+   ```
 
 3. Stop the stack:
    ```bash

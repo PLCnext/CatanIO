@@ -1,0 +1,31 @@
+services:
+  tailscale:
+    image: docker.io/tailscale/tailscale:latest
+    container_name: tailscale
+    hostname: ${TS_HOSTNAME:-catan-tailscale}
+    restart: unless-stopped
+
+    userns_mode: keep-id
+    user: 1002:1002 
+
+    # Use the network namespace of the Catan host.
+    # The tailscale0 interface is created directly on the host.
+    network_mode: host
+
+    environment:
+      # Authentication and node configuration
+      TS_AUTHKEY: ${TS_AUTHKEY}
+      TS_HOSTNAME: ${TS_HOSTNAME:-catan-tailscale}
+      TS_AUTH_ONCE: "true"
+
+      # Store the node identity persistently
+      TS_STATE_DIR: /var/lib/tailscale
+
+      # Use kernel networking with a real TUN interface
+      TS_USERSPACE: "true"
+
+      # Do not modify the DNS configuration of the Catan host
+      TS_ACCEPT_DNS: "false"
+
+    volumes:
+      - /home/admin/tailscale:/var/lib/tailscale

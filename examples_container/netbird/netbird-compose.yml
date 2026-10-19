@@ -1,10 +1,10 @@
 services:
   netbird:
-    image: docker.io/netbirdio/netbird:latest
+    image: docker.io/netbirdio/netbird:rootless-latest
     container_name: netbird
     restart: unless-stopped
     volumes:
-      - ./netbird:/etc/netbird
+      - /home/admin/netbird:/etc/netbird
     network_mode: host
     environment:
       - NB_SETUP_KEY=<your-setup-key>
